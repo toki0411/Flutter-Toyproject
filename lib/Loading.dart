@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:blackup/profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
@@ -7,80 +9,94 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'Login.dart';
 
+
 class Loading extends StatefulWidget{
-    _Loading createState() => _Loading();
+
+  _Loading createState() => _Loading();
 }
+
 class _Loading extends State<Loading> {
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        backgroundColor: const Color(0xff1677ff),
-        body: Stack(
-          children: <Widget>[
-            Pinned.fromPins(
-              Pin(start: 0.0, end: 0.0),
-              Pin(size: 90.0, start: 0.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: const AssetImage(''),
-                    fit: BoxFit.fill,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xff1677ff),
+      body: Stack(
+        children: <Widget>[
+          Pinned.fromPins(
+            Pin(start: 0.0, end: 0.0),
+            Pin(size: 90.0, start: 0.0),
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: const AssetImage(''),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: SizedBox(
+              width: 230.0,
+              height: 151.0,
+              child: Stack(
+                children: <Widget>[
+                  Pinned.fromPins(
+                    Pin(start: 0.0, end: 0.0),
+                    Pin(size: 64.5, end: 0.0),
+                    child: SvgPicture.string(
+                      _svg_yl36,
+                      allowDrawingOutsideViewBox: true,
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                ),
+                  Pinned.fromPins(
+                    Pin(size: 67.4, start: 26.2),
+                    Pin(size: 67.4, start: 0.0),
+                    child: SvgPicture.string(
+                      _svg_o4gi71,
+                      allowDrawingOutsideViewBox: true,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  Pinned.fromPins(
+                    Pin(size: 67.4, end: 33.2),
+                    Pin(size: 67.4, start: 0.0),
+                    child: SvgPicture.string(
+                      _svg_me32hg,
+                      allowDrawingOutsideViewBox: true,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+
+                ],
               ),
             ),
-            Center(
-              child: SizedBox(
-                width: 230.0,
-                height: 151.0,
-                child: Stack(
-                  children: <Widget>[
-                    Pinned.fromPins(
-                      Pin(start: 0.0, end: 0.0),
-                      Pin(size: 64.5, end: 0.0),
-                      child: SvgPicture.string(
-                        _svg_yl36,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Pinned.fromPins(
-                      Pin(size: 67.4, start: 26.2),
-                      Pin(size: 67.4, start: 0.0),
-                      child: SvgPicture.string(
-                        _svg_o4gi71,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    Pinned.fromPins(
-                      Pin(size: 67.4, end: 33.2),
-                      Pin(size: 67.4, start: 0.0),
-                      child: SvgPicture.string(
-                        _svg_me32hg,
-                        allowDrawingOutsideViewBox: true,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-
-                  ],
-                ),
-              ),
-            ),
-
-          ],
-        ),
-
-      );
-    }
-    @override
-    void initState() {
-      Timer(Duration(milliseconds: 2000), () {
-        Navigator.push(context, CupertinoPageRoute(
-            builder: (context) => MyHomePage(title: 'Flutter Demo Home Page')
-        ));
-      });
+          ),
+        ],
+      ),
+    );
   }
+  // FirebaseAuth.instance.authStateChanges().listen((User user) {
+  // if (user == null) {
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        Timer(Duration(milliseconds: 2000), () {
+          Navigator.push(context, CupertinoPageRoute(
+              builder: (context) => MyHomePage()  //로그인 페이지
+          ));
+        });
+      } else {
+        Timer(Duration(milliseconds: 2000), () {
+          Navigator.push(context, CupertinoPageRoute(
+              builder: (context) => MyPage()  //홈화면
+          ));
+        });
+      }
+    });
+}
 }
 
 
@@ -93,4 +109,3 @@ const String _svg_o4gi71 =
     '<svg viewBox="26.2 0.0 67.4 67.4" ><path transform="translate(-69.81, 0.0)" d="M 163.3643341064453 33.68503189086914 C 163.3643341064453 52.28824615478516 148.2835235595703 67.36905670166016 129.6802978515625 67.36905670166016 C 111.0770874023438 67.36905670166016 95.99600219726562 52.28824615478516 95.99600219726562 33.68503189086914 C 95.99600219726562 15.08181381225586 111.0770874023438 0.001000000047497451 129.6802978515625 0.001000000047497451 C 148.2835235595703 0.001000000047497451 163.3643341064453 15.08181381225586 163.3643341064453 33.68503189086914" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>';
 const String _svg_me32hg =
     '<svg viewBox="129.0 0.0 67.4 67.4" ><path transform="translate(-343.95, 0.0)" d="M 540.3165893554688 33.68503189086914 C 540.3165893554688 52.28824615478516 525.2354736328125 67.36905670166016 506.6322937011719 67.36905670166016 C 488.0293579101562 67.36905670166016 472.947998046875 52.28824615478516 472.947998046875 33.68503189086914 C 472.947998046875 15.08181381225586 488.0293579101562 0.001000000047497451 506.6322937011719 0.001000000047497451 C 525.2354736328125 0.001000000047497451 540.3165893554688 15.08181381225586 540.3165893554688 33.68503189086914" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>';
-
