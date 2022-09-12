@@ -36,7 +36,8 @@ class Login extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {},
                 child: Text(''),
-                style: ElevatedButton.styleFrom(primary: Colors.yellow),
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.yellow, elevation: 0.0),
               ),
               decoration: BoxDecoration(
                 color: const Color(0xffffe500),
@@ -72,7 +73,8 @@ class Login extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {},
                 child: Text(''),
-                style: ElevatedButton.styleFrom(primary: Colors.green),
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.green, elevation: 0.0),
               ),
               decoration: BoxDecoration(
                 color: const Color(0xff01c73c),
@@ -107,7 +109,8 @@ class Login extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {},
                 child: Text(''),
-                style: ElevatedButton.styleFrom(primary: Colors.black),
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.black, elevation: 0.0),
               ),
               decoration: BoxDecoration(
                 color: const Color(0xff191919),
@@ -138,28 +141,27 @@ class Login extends StatelessWidget {
           Align(
             alignment: Alignment(0.004, 0.497),
             child: SizedBox(
-              width: 150.0,
-              height: 17.0,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.transparent,
-                elevation: 0.0),
-                onPressed: (){},
-                child: Text(
-                '로그인 없이 둘러보기',
-                style: TextStyle(
-                  fontFamily: 'Source Han Sans KR',
-                  fontSize: 12,
-                  color: const Color(0xff767676),
-                  letterSpacing: -0.30000000000000004,
-                  decoration: TextDecoration.underline,
-                  height: 6.666666666666667,
-                ),
-                textHeightBehavior:
-                TextHeightBehavior(applyHeightToFirstAscent: false),
-                softWrap: false,
-              ),)
-            ),
+                width: 150.0,
+                height: 17.0,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.transparent, elevation: 0.0),
+                  onPressed: () {},
+                  child: Text(
+                    '로그인 없이 둘러보기',
+                    style: TextStyle(
+                      fontFamily: 'Source Han Sans KR',
+                      fontSize: 12,
+                      color: const Color(0xff767676),
+                      letterSpacing: -0.30000000000000004,
+                      decoration: TextDecoration.underline,
+                      height: 6.666666666666667,
+                    ),
+                    textHeightBehavior:
+                        TextHeightBehavior(applyHeightToFirstAscent: false),
+                    softWrap: false,
+                  ),
+                )),
           ),
           Align(
             alignment: Alignment(-0.424, 0.377),
