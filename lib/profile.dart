@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
+import 'mainscreen.dart';
 
 _MyPageState? pageState;
 class MyPage extends StatefulWidget {
@@ -25,6 +29,12 @@ class _MyPageState extends State<MyPage> {
    UploadTask? uploadTask;
    FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
    String _profileImageURL = "";
+   CollectionReference product = FirebaseFirestore.instance.collection('profile');
+
+   final TextEditingController nameController = TextEditingController();
+   final TextEditingController ageController = TextEditingController();
+   final TextEditingController introduceController = TextEditingController();
+   late final String gender;
 
    @override
    void initState() {
@@ -196,7 +206,9 @@ class _MyPageState extends State<MyPage> {
                           Pin(size: 48.0, middle: 0.3726),
                           child: Container(
                             child: ElevatedButton(
-                                onPressed: (){},
+                                onPressed: (){
+                                  gender = "man";
+                                },
                                 style: ElevatedButton.styleFrom(
                                     primary: Colors.transparent, elevation: 0.0),
                                 child: Text('')),
@@ -236,7 +248,9 @@ class _MyPageState extends State<MyPage> {
                           Pin(size: 48.0, middle: 0.3726),
                           child: Container(
                             child: ElevatedButton(
-                                onPressed: (){},
+                                onPressed: (){
+                                  gender = "woman";
+                                },
                                 style: ElevatedButton.styleFrom(
                                     primary: Colors.transparent, elevation: 0.0),
                                 child: Text('')),
@@ -321,8 +335,11 @@ class _MyPageState extends State<MyPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(9.0),
                                 child: TextFormField(
+                                  controller: ageController,
+                                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                                   decoration: InputDecoration(
-                                      border: InputBorder.none
+                                      border: InputBorder.none,
+
                                   ),
                                 ),
                               )
@@ -359,9 +376,11 @@ class _MyPageState extends State<MyPage> {
                             Pin(size: 200.0, middle: 0.6762),
                             child:
                             TextFormField(
+                              controller: introduceController,
                               minLines: 1,
                               maxLines: 4,
                               decoration: InputDecoration(
+
                                   hintText: '자기소개를 입력하세요',
                                   hintStyle: TextStyle(
                                     fontFamily: 'Source Han Sans KR',
@@ -644,7 +663,22 @@ class _MyPageState extends State<MyPage> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   primary: Colors.transparent, elevation: 0.0),
-                              onPressed: () {}, child: null,
+                              onPressed: () async {
+                                final String name = nameController.text;
+                                final String introduce = introduceController.text;
+                                final String age = ageController.text;
+                                final String? uid =_user?.uid;
+
+                                await product.add({'uid':uid,'name': name, 'age': age, 'introduce':introduce, 'gender':gender});
+
+                                nameController.text = "";
+                                ageController.text = "";
+                                introduceController.text = "";
+
+                                Navigator.push(context, CupertinoPageRoute(
+                                    builder: (context) => mainscreen()  //로그인 페이지
+                                ));
+                              },child: null,
                             ),
                             decoration: BoxDecoration(
                               color: const Color(0xffededed),
@@ -672,7 +706,9 @@ class _MyPageState extends State<MyPage> {
                             Pin(size: 30.0, middle: 0.2791),
                             child:
                             TextFormField(
+                              controller: nameController,
                               decoration: InputDecoration(
+
                                   hintText: '이름을 입력하세요',
                                   hintStyle: TextStyle(
                                     fontFamily: 'Source Han Sans KR',
