@@ -253,7 +253,7 @@ class _MyPageState extends State<MyPage> {
                           softWrap: false,
                         ),
                       ),
-                      //** 나이 TextField */
+                      ///** 나이 TextField */
                       Pinned.fromPins(
                         Pin(size: 71.0, start: 24.0),
                         Pin(size: 48.0, middle: 0.4753),
@@ -266,6 +266,7 @@ class _MyPageState extends State<MyPage> {
                             child: Padding(
                               padding: const EdgeInsets.all(9.0),
                               child: TextFormField(
+                                keyboardType: TextInputType.number,
                                 decoration:
                                     InputDecoration(border: InputBorder.none),
                               ),
