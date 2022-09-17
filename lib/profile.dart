@@ -23,805 +23,830 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-   File? _image;
-   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-   User? _user;
-   UploadTask? uploadTask;
-   FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
-   String _profileImageURL = "";
-   CollectionReference product = FirebaseFirestore.instance.collection('profile');
+  File? _image;
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  User? _user;
+  UploadTask? uploadTask;
+  FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+  String _profileImageURL = "";
+  CollectionReference product = FirebaseFirestore.instance.collection(
+      'profile');
 
-   final TextEditingController nameController = TextEditingController();
-   final TextEditingController ageController = TextEditingController();
-   final TextEditingController introduceController = TextEditingController();
-   late final String gender;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController introduceController = TextEditingController();
+  final TextEditingController instagramController = TextEditingController();
+  final TextEditingController facebookController = TextEditingController();
+  final TextEditingController twitterController = TextEditingController();
+  final TextEditingController naverblogController = TextEditingController();
+  late final String gender;
 
-   @override
-   void initState() {
-     super.initState();
-     _prepareService();
-   }
-   void _prepareService() async {
-     _user = await _firebaseAuth.currentUser!;
-   }
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
+  ///성별 선택 버튼 설정
+  final List<bool> _selectedGender = <bool>[true, false,];
+  bool vertical = false;
+
+  ///
+
+  @override
+  void initState() {
+    super.initState();
+    _prepareService();
+  }
+
+  void _prepareService() async {
+    _user = await _firebaseAuth.currentUser!;
+  }
+  void _buttonAble () async{
+    if(nameController.text != ""&&ageController.text != ""&&introduceController.text != ""){
+        final String name = nameController.text;
+        final String introduce = introduceController.text;
+        final String age = ageController.text;
+        final String? uid = _user?.uid;
+        final String instagram = instagramController.text;
+        final String twitter = twitterController.text;
+        final String facebook = facebookController.text;
+        final String naverblog = naverblogController.text;
+        if (_selectedGender[0] == true) {
+          gender = "man";
+        }
+        else if (_selectedGender[1] == true) {
+          gender = "woman";
+        }
+        await product.add({
+          'uid': uid,
+          'name': name,
+          'age': age,
+          'introduce': introduce,
+          'gender': gender,
+          'instagram': instagram,
+          'facebook': facebook,
+          'twitter': twitter,
+          'naverblog': naverblog
+        });
+        nameController.text = "";
+        ageController.text = "";
+        introduceController.text = "";
+        instagramController.text ="";
+        twitterController.text ="";
+        facebookController.text ="";
+        naverblogController.text ="";
+        Navigator.push(context, CupertinoPageRoute(
+            builder: (context) => mainscreen() //로그인 페이지
+        ));
+    }
+    else {
+      //필수항목을 입력해주세요 알림창
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('필수 항목을 입력해주세요.'),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          '프로필설정',
+          style: TextStyle(
+            fontFamily: 'Source Han Sans KR',
+            fontSize: 20,
+            color: const Color(0xff191919),
+            letterSpacing: -1,
+            fontWeight: FontWeight.w500,
+            height: 2,
+          ),
+          textHeightBehavior: TextHeightBehavior(
+              applyHeightToFirstAscent: false),
+          softWrap: false,
+        ),
+        elevation: 0.0,
         backgroundColor: const Color(0xffffffff),
-        body: GestureDetector(
-          onTap: (){
-            FocusScope.of(context).unfocus();
-          },
-          child: Stack(
-            children: <Widget>[
-              Pinned.fromPins(
-                Pin(size: 375.0, middle: 0.5),
-                Pin(start: 0.0, end: 0.0),
-                child: SingleChildScrollView(
-                  primary: false,
-                  child: SizedBox(
-                    width: 375.0,
-                    height: 1065.0,
-                    child: Stack(
-                      children: <Widget>[
-                        Pinned.fromPins(
-                          Pin(size: 96.0, middle: 0.4982),
-                          Pin(size: 96.0, start: 130.0),
-                          child: Stack(
-                            children: <Widget>[
-                              Stack(
-                                children: <Widget>[
-                                  Padding(
-                                    padding:
-                                    EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 17.2),
-                                  ),
-                                  Pinned.fromPins(
-                                    Pin(start: 11.2, end: 10.0),
-                                    Pin(size: 32.1, end: 0.0),
-                                    child: SvgPicture.string(
-                                      _svg_ma91rn,
-                                      allowDrawingOutsideViewBox: true,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  //** 프로필 사진 부분 CircleAvatar */
-                                  Align(
-                                    alignment: Alignment(-0.041, -0.03),
-                                    child: SizedBox(
-                                      width: 71.0,
-                                      height: 71.0,
-                                      child:  CircleAvatar(
-                                        backgroundImage:
-                                        (_image != null) ? FileImage(_image!)as ImageProvider : NetworkImage(""),
-                                        radius: 30,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                  ),
-                                ],
-                              ),
-                        ),
-
-                        Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xffffffff),
-                            borderRadius: BorderRadius.circular(30.0),
-                            border: Border.all(
-                                width: 2.0, color: const Color(0xffdbdbdb)),
-                          ),
-                          margin: EdgeInsets.fromLTRB(206.0, 197.0, 169.0, 903.0),
-                        ),
-                        //**프로필 사진 카메라 변경부분 버튼*/
-                        Pinned.fromPins(
-                          Pin(size: 15.0, middle: 0.5917),
-                          Pin(size: 14.0, start: 203.0),
-                          child: Stack(
-                            children: <Widget>[
-                              Stack(
-                                children: <Widget>[
-                                  SizedBox.expand(
-                                      child: SvgPicture.string(
-                                        _svg_vmw9m4,
-                                        allowDrawingOutsideViewBox: true,
-                                        fit: BoxFit.fill,
-                                      )),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        _uploadImageToStorage(ImageSource.gallery);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          primary: Colors.transparent, elevation: 0.0),
-                                      child: Text(''))
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 29.0, start: 24.0),
-                          Pin(size: 24.0, middle: 0.2314),
-                          child: Text(
-                            '이름',
-                            style: TextStyle(
-                              fontFamily: 'Source Han Sans KR',
-                              fontSize: 16,
-                              color: const Color(0xff191919),
-                              fontWeight: FontWeight.w500,
-                            ),
-                            softWrap: false,
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(start: 24.0, end: 24.0),
-                          Pin(size: 48.0, middle: 0.27),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xffdbdbdb)),
-                            ),
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 106.0, start: 24.0),
-                          Pin(size: 24.0, middle: 0.3318),
-                          child: Text.rich(
-                            TextSpan(
-                              style: TextStyle(
-                                fontFamily: 'Source Han Sans KR',
-                                fontSize: 16,
-                                color: const Color(0xff191919),
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: '성별',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+      ),
+      backgroundColor: const Color(0xffffffff),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Stack(
+          children: <Widget>[
+            Pinned.fromPins(
+              Pin(size: 375.0, middle: 0.5),
+              Pin(start: -100.0, end: 0.0),
+              child: SingleChildScrollView(
+                primary: false,
+                child: SizedBox(
+                  width: 375.0,
+                  height: 1065.0,
+                  child: Stack(
+                    children: <Widget>[
+                      Pinned.fromPins(
+                        Pin(size: 96.0, middle: 0.4982),
+                        Pin(size: 96.0, start: 130.0),
+                        child: Stack(
+                          children: <Widget>[
+                            Stack(
+                              children: <Widget>[
+                                Padding(
+                                  padding:
+                                  EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 17.2),
                                 ),
-                                TextSpan(
-                                  text: ' ',
-                                  style: TextStyle(
-                                    color: const Color(0xff000000),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: '(수정불가) ',
-                                  style: TextStyle(
-                                    color: const Color(0xffc5c5c5),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            textHeightBehavior:
-                            TextHeightBehavior(applyHeightToFirstAscent: false),
-                            softWrap: false,
-                          ),
-                        ),
-                        //** 성별 버튼 남 여
-                        Pinned.fromPins(
-                          Pin(size: 163.0, start: 25.0),
-                          Pin(size: 48.0, middle: 0.3726),
-                          child: Container(
-                            child: ElevatedButton(
-                                onPressed: (){
-                                  gender = "man";
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.transparent, elevation: 0.0),
-                                child: Text('')),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10.0),
-                                bottomLeft: Radius.circular(10.0),
-                              ),
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xffdbdbdb)),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment(-0.45, -0.249),
-                          child: SizedBox(
-                            width: 15.0,
-                            height: 24.0,
-                            child: Text(
-                              '남',
-                              style: TextStyle(
-                                fontFamily: 'Source Han Sans KR',
-                                fontSize: 16,
-                                color: const Color(0xff191919),
-                                letterSpacing: -0.4,
-                                fontWeight: FontWeight.w500,
-                                height: 5,
-                              ),
-                              textHeightBehavior: TextHeightBehavior(
-                                  applyHeightToFirstAscent: false),
-                              softWrap: false,
-                            ),
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 163.0, end: 24.0),
-                          Pin(size: 48.0, middle: 0.3726),
-                          child: Container(
-                            child: ElevatedButton(
-                                onPressed: (){
-                                  gender = "woman";
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.transparent, elevation: 0.0),
-                                child: Text('')),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(10.0),
-                                bottomRight: Radius.circular(10.0),
-                              ),
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xffdbdbdb)),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment(0.456, -0.249),
-                          child: SizedBox(
-                            width: 15.0,
-                            height: 24.0,
-                            child: Text(
-                              '여',
-                              style: TextStyle(
-                                fontFamily: 'Source Han Sans KR',
-                                fontSize: 16,
-                                color: const Color(0xff191919),
-                                letterSpacing: -0.4,
-                                fontWeight: FontWeight.w500,
-                                height: 5,
-                              ),
-                              textHeightBehavior: TextHeightBehavior(
-                                  applyHeightToFirstAscent: false),
-                              softWrap: false,
-                            ),
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 103.0, start: 24.0),
-                          Pin(size: 24.0, middle: 0.4312),
-                          child: Text.rich(
-                            TextSpan(
-                              style: TextStyle(
-                                fontFamily: 'Source Han Sans KR',
-                                fontSize: 16,
-                                color: const Color(0xff191919),
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: '나이',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: ' ',
-                                  style: TextStyle(
-                                    color: const Color(0xff000000),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: '(수정불가)',
-                                  style: TextStyle(
-                                    color: const Color(0xffc5c5c5),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            textHeightBehavior:
-                            TextHeightBehavior(applyHeightToFirstAscent: false),
-                            softWrap: false,
-                          ),
-                        ),
-                        //** 나이 TextField */
-                        Pinned.fromPins(
-                          Pin(size: 71.0, start: 24.0),
-                          Pin(size: 48.0, middle: 0.4753),
-                          child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                border: Border.all(
-                                    width: 1.0, color: const Color(0xffdbdbdb)),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(9.0),
-                                child: TextFormField(
-                                  controller: ageController,
-                                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-
-                                  ),
-                                ),
-                              )
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(start: 24.0, end: 24.0),
-                          Pin(size: 109.0, middle: 0.6125),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xffdbdbdb)),
-                            ),
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 59.0, start: 24.0),
-                          Pin(size: 24.0, middle: 0.5316),
-                          child: Text(
-                            '자기소개',
-                            style: TextStyle(
-                              fontFamily: 'Source Han Sans KR',
-                              fontSize: 16,
-                              color: const Color(0xff191919),
-                              fontWeight: FontWeight.w500,
-                            ),
-                            softWrap: false,
-                          ),
-                        ),
-                        //* 자기소개 TextField */
-                        Pinned.fromPins(
-                            Pin(size: 300.0, start: 36.0),
-                            Pin(size: 200.0, middle: 0.6762),
-                            child:
-                            TextFormField(
-                              controller: introduceController,
-                              minLines: 1,
-                              maxLines: 4,
-                              decoration: InputDecoration(
-
-                                  hintText: '자기소개를 입력하세요',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Source Han Sans KR',
-                                    fontSize: 16,
-                                    color: const Color(0xff999999),
-                                  ),
-                                  border: InputBorder.none
-                              ),
-                            )
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 75.0, start: 24.0),
-                          Pin(size: 24.0, middle: 0.6887),
-                          child: Text.rich(
-                            TextSpan(
-                              style: TextStyle(
-                                fontFamily: 'Source Han Sans KR',
-                                fontSize: 16,
-                                color: const Color(0xff191919),
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: 'SNS',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: ' ',
-                                  style: TextStyle(
-                                    color: const Color(0xff000000),
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: '(선택)',
-                                  style: TextStyle(
-                                    color: const Color(0xffc5c5c5),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            textHeightBehavior:
-                            TextHeightBehavior(applyHeightToFirstAscent: false),
-                            softWrap: false,
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 18.0, start: 31.0),
-                          Pin(size: 18.0, middle: 0.7878),
-                          child: Stack(
-                            children: <Widget>[
-                              Stack(
-                                children: <Widget>[
-                                  Pinned.fromPins(
-                                    Pin(size: 10.0, middle: 0.3814),
-                                    Pin(start: 0.0, end: 0.0),
-                                    child: SvgPicture.string(
-                                      _svg_ycxwyu,
-                                      allowDrawingOutsideViewBox: true,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  Pinned.fromPins(
-                                    Pin(start: 0.0, end: 0.0),
-                                    Pin(size: 8.0, middle: 0.4578),
-                                    child: Container(
-                                      decoration: BoxDecoration(),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 18.0, start: 31.0),
-                          Pin(size: 18.0, middle: 0.7394),
-                          child: Stack(
-                            children: <Widget>[
-                              SizedBox.expand(
+                                Pinned.fromPins(
+                                  Pin(start: 11.2, end: 10.0),
+                                  Pin(size: 32.1, end: 0.0),
                                   child: SvgPicture.string(
-                                    _svg_f0mu4g,
+                                    _svg_ma91rn,
                                     allowDrawingOutsideViewBox: true,
                                     fit: BoxFit.fill,
-                                  )),
-                              Padding(
-                                padding: EdgeInsets.all(4.5),
-                                child: SizedBox.expand(
+                                  ),
+                                ),
+
+                                //** 프로필 사진 부분 CircleAvatar */
+                                Align(
+                                  alignment: Alignment(-0.041, -0.03),
+                                  child: SizedBox(
+                                    width: 150.0,
+                                    height: 150.0,
+                                    child: CircleAvatar(
+                                      backgroundImage:
+                                      (_image != null)
+                                          ? FileImage(_image!) as ImageProvider
+                                          : NetworkImage(""),
+                                      radius: 30,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xffffffff),
+                          borderRadius: BorderRadius.circular(30.0),
+                          border: Border.all(
+                              width: 2.0, color: const Color(0xffdbdbdb)),
+                        ),
+                        margin: EdgeInsets.fromLTRB(206.0, 197.0, 169.0, 903.0),
+                      ),
+                      //**프로필 사진 카메라 변경부분 버튼*/
+                      Pinned.fromPins(
+                        Pin(size: 15.0, middle: 0.5917),
+                        Pin(size: 14.0, start: 203.0),
+                        child: Stack(
+                          children: <Widget>[
+                            Stack(
+                              children: <Widget>[
+                                SizedBox.expand(
                                     child: SvgPicture.string(
-                                      _svg_q4ma23,
+                                      _svg_vmw9m4,
                                       allowDrawingOutsideViewBox: true,
                                       fit: BoxFit.fill,
                                     )),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      _uploadImageToStorage(
+                                          ImageSource.gallery);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        primary: Colors.transparent,
+                                        elevation: 0.0),
+                                    child: Text(''))
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 29.0, start: 24.0),
+                        Pin(size: 24.0, middle: 0.2314),
+                        child: Text(
+                          '이름',
+                          style: TextStyle(
+                            fontFamily: 'Source Han Sans KR',
+                            fontSize: 16,
+                            color: const Color(0xff191919),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          softWrap: false,
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(start: 24.0, end: 24.0),
+                        Pin(size: 48.0, middle: 0.27),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xffdbdbdb)),
+                          ),
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 106.0, start: 24.0),
+                        Pin(size: 24.0, middle: 0.3318),
+                        child: Text.rich(
+                          TextSpan(
+                            style: TextStyle(
+                              fontFamily: 'Source Han Sans KR',
+                              fontSize: 16,
+                              color: const Color(0xff191919),
+                            ),
+                            children: [
+                              TextSpan(
+                                text: '성별',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                              Align(
-                                alignment: Alignment(0.597, -0.623),
-                                child: SizedBox(
-                                  width: 2.0,
-                                  height: 2.0,
-                                  child: SvgPicture.string(
-                                    _svg_muft33,
-                                    allowDrawingOutsideViewBox: true,
-                                  ),
+                              TextSpan(
+                                text: ' ',
+                                style: TextStyle(
+                                  color: const Color(0xff000000),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '(수정불가) ',
+                                style: TextStyle(
+                                  color: const Color(0xffc5c5c5),
                                 ),
                               ),
                             ],
                           ),
+                          textHeightBehavior:
+                          TextHeightBehavior(applyHeightToFirstAscent: false),
+                          softWrap: false,
                         ),
-                        Pinned.fromPins(
-                          Pin(size: 20.0, start: 30.0),
-                          Pin(size: 16.0, end: 176.0),
-                          child: Stack(
+                      ),
+                      //** 성별 버튼 남 여
+                      Pinned.fromPins(
+                        Pin(size: 203.0, start: 25.0),
+                        Pin(size: 48.0, middle: 0.3726),
+
+                        /// 남자 여자 버튼
+                        child: Container(
+                          child: ToggleButtons(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                             children: <Widget>[
-                              Stack(
-                                children: <Widget>[
-                                  SizedBox.expand(
-                                      child: SvgPicture.string(
-                                        _svg_bnjt0o,
-                                        allowDrawingOutsideViewBox: true,
-                                        fit: BoxFit.fill,
-                                      )),
-                                ],
-                              ),
+                              Container(
+                                  alignment: Alignment.center,
+                                  width: 90,
+                                  child: Text('남')),
+                              Container(
+                                  alignment: Alignment.center,
+                                  width: 90,
+                                  child: Text('여')),
                             ],
+                            onPressed: (int index) {
+                              setState(() {
+                                for (int buttonIndex = 0; buttonIndex <
+                                    _selectedGender.length; buttonIndex++) {
+                                  if (buttonIndex == index) {
+                                    _selectedGender[buttonIndex] = true;
+                                  } else {
+                                    _selectedGender[buttonIndex] = false;
+                                  }
+                                }
+                              });
+                            },
+                            isSelected: _selectedGender,
                           ),
                         ),
-                        //** SNS 아이콘 부분 */
-                        Pinned.fromPins(
-                          Pin(size: 23.0, start: 29.0),
-                          Pin(size: 10.0, end: 124.0),
-                          child: Stack(
-                            children: <Widget>[
-                              Stack(
-                                children: <Widget>[
-                                  Pinned.fromPins(
-                                    Pin(size: 5.9, start: 0.0),
-                                    Pin(size: 7.4, start: 0.6),
-                                    child: SvgPicture.string(
-                                      _svg_p6p15z,
-                                      allowDrawingOutsideViewBox: true,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment(-0.37, -0.679),
-                                    child: SizedBox(
-                                      width: 3.0,
-                                      height: 7.0,
-                                      child: SvgPicture.string(
-                                        _svg_wlqjp,
-                                        allowDrawingOutsideViewBox: true,
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment(0.209, 0.135),
-                                    child: SizedBox(
-                                      width: 6.0,
-                                      height: 5.0,
-                                      child: SvgPicture.string(
-                                        _svg_zk91h,
-                                        allowDrawingOutsideViewBox: true,
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: SizedBox(
-                                      width: 6.0,
-                                      height: 8.0,
-                                      child: SvgPicture.string(
-                                        _svg_l9jw0k,
-                                        allowDrawingOutsideViewBox: true,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        //** SNS TextFormField */
-                        Pinned.fromPins(
-                          Pin(size: 272.0, end: 41.0),
-                          Pin(size: 40.0, middle: 0.7443),
-                          child: Container(
-                            child:
-                            TextFormField(
-                              decoration: InputDecoration(
-                                  hintText: '',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Source Han Sans KR',
-                                    fontSize: 15,
-                                    color: const Color(0xff999999),
-                                  ),
-                                  border: InputBorder.none
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xffdbdbdb)),
-                            ),
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 272.0, end: 41.0),
-                          Pin(size: 40.0, end: 164.0),
-                          child: Container(
-                            child:
-                            TextFormField(
-                              decoration: InputDecoration(
-                                  hintText: '',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Source Han Sans KR',
-                                    fontSize: 15,
-                                    color: const Color(0xff999999),
-                                  ),
-                                  border: InputBorder.none
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xffdbdbdb)),
-                            ),
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 272.0, end: 41.0),
-                          Pin(size: 40.0, middle: 0.7962),
-                          child: Container(
-                            child:
-                            TextFormField(
-                              decoration: InputDecoration(
-                                  hintText: '',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Source Han Sans KR',
-                                    fontSize: 15,
-                                    color: const Color(0xff999999),
-                                  ),
-                                  border: InputBorder.none
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xffdbdbdb)),
-                            ),
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 272.0, end: 41.0),
-                          Pin(size: 40.0, end: 109.0),
-                          child: Container(
-                            child:
-                            TextFormField(
-                              decoration: InputDecoration(
-                                  hintText: '',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Source Han Sans KR',
-                                    fontSize: 15,
-                                    color: const Color(0xff999999),
-                                  ),
-                                  border: InputBorder.none
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(
-                                  width: 1.0, color: const Color(0xffdbdbdb)),
-                            ),
-                          ),
-                        ),
-                        //** 완료버튼 */
-                        Pinned.fromPins(
-                          Pin(start: 24.0, end: 24.0),
-                          Pin(size: 49.0, end: 35.0),
-                          child: Container(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.transparent, elevation: 0.0),
-                              onPressed: () async {
-                                final String name = nameController.text;
-                                final String introduce = introduceController.text;
-                                final String age = ageController.text;
-                                final String? uid =_user?.uid;
-
-                                await product.add({'uid':uid,'name': name, 'age': age, 'introduce':introduce, 'gender':gender});
-
-                                nameController.text = "";
-                                ageController.text = "";
-                                introduceController.text = "";
-
-                                Navigator.push(context, CupertinoPageRoute(
-                                    builder: (context) => mainscreen()  //로그인 페이지
-                                ));
-                              },child: null,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xffededed),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                        ),
-                        Pinned.fromPins(
-                          Pin(size: 33.0, middle: 0.5),
-                          Pin(size: 26.0, end: 47.0),
-                          child: Text(
-                            '완료',
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 103.0, start: 24.0),
+                        Pin(size: 24.0, middle: 0.4312),
+                        child: Text.rich(
+                          TextSpan(
                             style: TextStyle(
                               fontFamily: 'Source Han Sans KR',
-                              fontSize: 18,
-                              color: const Color(0xffffffff),
-                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: const Color(0xff191919),
                             ),
-                            softWrap: false,
+                            children: [
+                              TextSpan(
+                                text: '나이',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextSpan(
+                                text: ' ',
+                                style: TextStyle(
+                                  color: const Color(0xff000000),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '(수정불가)',
+                                style: TextStyle(
+                                  color: const Color(0xffc5c5c5),
+                                ),
+                              ),
+                            ],
                           ),
+                          textHeightBehavior:
+                          TextHeightBehavior(applyHeightToFirstAscent: false),
+                          softWrap: false,
                         ),
-                        //** 프로필 이름 입력 TextField */
-                        Pinned.fromPins(
-                            Pin(size: 130.0, start: 36.0),
-                            Pin(size: 30.0, middle: 0.2791),
-                            child:
-                            TextFormField(
-                              controller: nameController,
-                              decoration: InputDecoration(
+                      ),
+                      //** 나이 TextField */
+                      Pinned.fromPins(
+                        Pin(size: 71.0, start: 24.0),
+                        Pin(size: 48.0, middle: 0.4753),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              border: Border.all(
+                                  width: 1.0, color: const Color(0xffdbdbdb)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(9.0),
+                              child: TextFormField(
+                                controller: ageController,
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
 
-                                  hintText: '이름을 입력하세요',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Source Han Sans KR',
-                                    fontSize: 15,
-                                    color: const Color(0xff999999),
-                                  ),
-                                  border: InputBorder.none
+                                ),
                               ),
                             )
                         ),
-                        Pinned.fromPins(
-                          Pin(start: 0.0, end: 0.0),
-                          Pin(size: 106.0, start: 0.0),
-                          child: Stack(
-                            children: <Widget>[
-                              Stack(
-                                children: <Widget>[
-                                  Stack(
-                                    children: <Widget>[
-                                      Container(
-                                        color: const Color(0xffffffff),
-                                        margin:
-                                        EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 1.0),
-                                      ),
-                                      Pinned.fromPins(
-                                        Pin(start: 0.0, end: 0.0),
-                                        Pin(size: 60.0, end: 0.0),
-                                        child: Container(
-                                          color: const Color(0xffffffff),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment(-0.573, 0.584),
-                                        child: SizedBox(
-                                          width: 94.0,
-                                          height: 29.0,
-                                          child: Text(
-                                            '프로필 설정',
-                                            style: TextStyle(
-                                              fontFamily: 'Source Han Sans KR',
-                                              fontSize: 20,
-                                              color: const Color(0xff191919),
-                                              letterSpacing: -0.5,
-                                              fontWeight: FontWeight.w500,
-                                              height: 4,
-                                            ),
-                                            textHeightBehavior: TextHeightBehavior(
-                                                applyHeightToFirstAscent: false),
-                                            softWrap: false,
-                                          ),
-                                        ),
-                                      ),
-                                      Pinned.fromPins(
-                                        Pin(size: 28.0, start: 24.0),
-                                        Pin(size: 28.0, middle: 0.7949),
-                                        child: Stack(
-                                          children: <Widget>[
-                                            SizedBox.expand(
-                                                child: SvgPicture.string(
-                                                  _svg_u7ytpg,
-                                                  allowDrawingOutsideViewBox: true,
-                                                  fit: BoxFit.fill,
-                                                )),
-                                            Pinned.fromPins(
-                                              Pin(start: 3.5, end: 3.5),
-                                              Pin(size: 14.0, middle: 0.5),
-                                              child: SvgPicture.string(
-                                                _svg_xsfw,
-                                                allowDrawingOutsideViewBox: true,
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                      ),
+                      Pinned.fromPins(
+                        Pin(start: 24.0, end: 24.0),
+                        Pin(size: 109.0, middle: 0.6125),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xffdbdbdb)),
+                          ),
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 59.0, start: 24.0),
+                        Pin(size: 24.0, middle: 0.5316),
+                        child: Text(
+                          '자기소개',
+                          style: TextStyle(
+                            fontFamily: 'Source Han Sans KR',
+                            fontSize: 16,
+                            color: const Color(0xff191919),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          softWrap: false,
+                        ),
+                      ),
+                      //* 자기소개 TextField */
+                      Pinned.fromPins(
+                          Pin(size: 300.0, start: 36.0),
+                          Pin(size: 200.0, middle: 0.6762),
+                          child:
+                          TextFormField(
+                            controller: introduceController,
+                            minLines: 1,
+                            maxLines: 4,
+                            decoration: InputDecoration(
+
+                                hintText: '자기소개를 입력하세요',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Source Han Sans KR',
+                                  fontSize: 16,
+                                  color: const Color(0xff999999),
+                                ),
+                                border: InputBorder.none
+                            ),
+                          )
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 75.0, start: 24.0),
+                        Pin(size: 24.0, middle: 0.6887),
+                        child: Text.rich(
+                          TextSpan(
+                            style: TextStyle(
+                              fontFamily: 'Source Han Sans KR',
+                              fontSize: 16,
+                              color: const Color(0xff191919),
+                            ),
+                            children: [
+                              TextSpan(
+                                text: 'SNS',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextSpan(
+                                text: ' ',
+                                style: TextStyle(
+                                  color: const Color(0xff000000),
+                                ),
+                              ),
+                              TextSpan(
+                                text: '(선택)',
+                                style: TextStyle(
+                                  color: const Color(0xffc5c5c5),
+                                ),
                               ),
                             ],
                           ),
+                          textHeightBehavior:
+                          TextHeightBehavior(applyHeightToFirstAscent: false),
+                          softWrap: false,
                         ),
-                      ],
-                    ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 18.0, start: 31.0),
+                        Pin(size: 18.0, middle: 0.7878),
+                        child: Stack(
+                          children: <Widget>[
+                            Stack(
+                              children: <Widget>[
+                                Pinned.fromPins(
+                                  Pin(size: 10.0, middle: 0.3814),
+                                  Pin(start: 0.0, end: 0.0),
+                                  child: SvgPicture.string(
+                                    _svg_ycxwyu,
+                                    allowDrawingOutsideViewBox: true,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                Pinned.fromPins(
+                                  Pin(start: 0.0, end: 0.0),
+                                  Pin(size: 8.0, middle: 0.4578),
+                                  child: Container(
+                                    decoration: BoxDecoration(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 18.0, start: 31.0),
+                        Pin(size: 18.0, middle: 0.7394),
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox.expand(
+                                child: SvgPicture.string(
+                                  _svg_f0mu4g,
+                                  allowDrawingOutsideViewBox: true,
+                                  fit: BoxFit.fill,
+                                )),
+                            Padding(
+                              padding: EdgeInsets.all(4.5),
+                              child: SizedBox.expand(
+                                  child: SvgPicture.string(
+                                    _svg_q4ma23,
+                                    allowDrawingOutsideViewBox: true,
+                                    fit: BoxFit.fill,
+                                  )),
+                            ),
+                            Align(
+                              alignment: Alignment(0.597, -0.623),
+                              child: SizedBox(
+                                width: 2.0,
+                                height: 2.0,
+                                child: SvgPicture.string(
+                                  _svg_muft33,
+                                  allowDrawingOutsideViewBox: true,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 20.0, start: 30.0),
+                        Pin(size: 16.0, end: 176.0),
+                        child: Stack(
+                          children: <Widget>[
+                            Stack(
+                              children: <Widget>[
+                                SizedBox.expand(
+                                    child: SvgPicture.string(
+                                      _svg_bnjt0o,
+                                      allowDrawingOutsideViewBox: true,
+                                      fit: BoxFit.fill,
+                                    )),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      //** SNS 아이콘 부분 */
+                      Pinned.fromPins(
+                        Pin(size: 23.0, start: 29.0),
+                        Pin(size: 10.0, end: 124.0),
+                        child: Stack(
+                          children: <Widget>[
+                            Stack(
+                              children: <Widget>[
+                                Pinned.fromPins(
+                                  Pin(size: 5.9, start: 0.0),
+                                  Pin(size: 7.4, start: 0.6),
+                                  child: SvgPicture.string(
+                                    _svg_p6p15z,
+                                    allowDrawingOutsideViewBox: true,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment(-0.37, -0.679),
+                                  child: SizedBox(
+                                    width: 3.0,
+                                    height: 7.0,
+                                    child: SvgPicture.string(
+                                      _svg_wlqjp,
+                                      allowDrawingOutsideViewBox: true,
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment(0.209, 0.135),
+                                  child: SizedBox(
+                                    width: 6.0,
+                                    height: 5.0,
+                                    child: SvgPicture.string(
+                                      _svg_zk91h,
+                                      allowDrawingOutsideViewBox: true,
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: SizedBox(
+                                    width: 6.0,
+                                    height: 8.0,
+                                    child: SvgPicture.string(
+                                      _svg_l9jw0k,
+                                      allowDrawingOutsideViewBox: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      //** SNS TextFormField */
+                      Pinned.fromPins(
+                        Pin(size: 272.0, end: 41.0),
+                        Pin(size: 40.0, middle: 0.7443),
+                        child: Container(
+                          child:
+                          TextFormField(
+                            controller: instagramController,
+                            decoration: InputDecoration(
+                                hintText: '',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Source Han Sans KR',
+                                  fontSize: 15,
+                                  color: const Color(0xff999999),
+                                ),
+                                border: InputBorder.none
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xffdbdbdb)),
+                          ),
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 272.0, end: 41.0),
+                        Pin(size: 40.0, end: 164.0),
+                        child: Container(
+                          child:
+                          TextFormField(
+                            controller: twitterController,
+                            decoration: InputDecoration(
+                                hintText: '',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Source Han Sans KR',
+                                  fontSize: 15,
+                                  color: const Color(0xff999999),
+                                ),
+                                border: InputBorder.none
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xffdbdbdb)),
+                          ),
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 272.0, end: 41.0),
+                        Pin(size: 40.0, middle: 0.7962),
+                        child: Container(
+                          child:
+                          TextFormField(
+                            controller: facebookController,
+                            decoration: InputDecoration(
+                                hintText: '',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Source Han Sans KR',
+                                  fontSize: 15,
+                                  color: const Color(0xff999999),
+                                ),
+                                border: InputBorder.none
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xffdbdbdb)),
+                          ),
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 272.0, end: 41.0),
+                        Pin(size: 40.0, end: 109.0),
+                        child: Container(
+                          child:
+                          TextFormField(
+                            controller: naverblogController,
+                            decoration: InputDecoration(
+                                hintText: '',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Source Han Sans KR',
+                                  fontSize: 15,
+                                  color: const Color(0xff999999),
+                                ),
+                                border: InputBorder.none
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xffdbdbdb)),
+                          ),
+                        ),
+                      ),
+                      //** 완료버튼 */
+                      Pinned.fromPins(
+                        Pin(start: 24.0, end: 24.0),
+                        Pin(size: 49.0, end: 35.0),
+                        child: Container(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.transparent, elevation: 0.0),
+                            onPressed:_buttonAble,
+                            child: null,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xffededed),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                      ),
+                      Pinned.fromPins(
+                        Pin(size: 33.0, middle: 0.5),
+                        Pin(size: 26.0, end: 47.0),
+                        child: Text(
+                          '완료',
+                          style: TextStyle(
+                            fontFamily: 'Source Han Sans KR',
+                            fontSize: 18,
+                            color: const Color(0xffffffff),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          softWrap: false,
+                        ),
+                      ),
+                      //** 프로필 이름 입력 TextField */
+                      Pinned.fromPins(
+                          Pin(size: 130.0, start: 36.0),
+                          Pin(size: 30.0, middle: 0.2791),
+                          child:
+                          TextFormField(
+                            controller: nameController,
+                            decoration: InputDecoration(
+
+                                hintText: '이름을 입력하세요',
+                                hintStyle: TextStyle(
+                                  fontFamily: 'Source Han Sans KR',
+                                  fontSize: 15,
+                                  color: const Color(0xff999999),
+                                ),
+                                border: InputBorder.none
+                            ),
+                          )
+                      ),
+                      Pinned.fromPins(
+                        Pin(start: 0.0, end: 0.0),
+                        Pin(size: 106.0, start: 0.0),
+                        child: Stack(
+                          children: <Widget>[
+                            Stack(
+                              children: <Widget>[
+                                Stack(
+                                  children: <Widget>[
+                                    Container(
+                                      color: const Color(0xffffffff),
+                                      margin:
+                                      EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 1.0),
+                                    ),
+                                    Pinned.fromPins(
+                                      Pin(start: 0.0, end: 0.0),
+                                      Pin(size: 60.0, end: 0.0),
+                                      child: Container(
+                                        color: const Color(0xffffffff),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment(-0.573, 0.584),
+                                      child: SizedBox(
+                                        width: 94.0,
+                                        height: 29.0,
+                                        child: Text(
+                                          '프로필 설정',
+                                          style: TextStyle(
+                                            fontFamily: 'Source Han Sans KR',
+                                            fontSize: 20,
+                                            color: const Color(0xff191919),
+                                            letterSpacing: -0.5,
+                                            fontWeight: FontWeight.w500,
+                                            height: 4,
+                                          ),
+                                          textHeightBehavior: TextHeightBehavior(
+                                              applyHeightToFirstAscent: false),
+                                          softWrap: false,
+                                        ),
+                                      ),
+                                    ),
+                                    Pinned.fromPins(
+                                      Pin(size: 28.0, start: 24.0),
+                                      Pin(size: 28.0, middle: 0.7949),
+                                      child: Stack(
+                                        children: <Widget>[
+                                          SizedBox.expand(
+                                              child: SvgPicture.string(
+                                                _svg_u7ytpg,
+                                                allowDrawingOutsideViewBox: true,
+                                                fit: BoxFit.fill,
+                                              )),
+                                          Pinned.fromPins(
+                                            Pin(start: 3.5, end: 3.5),
+                                            Pin(size: 14.0, middle: 0.5),
+                                            child: SvgPicture.string(
+                                              _svg_xsfw,
+                                              allowDrawingOutsideViewBox: true,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 
-    }
-   Future _uploadImageToStorage(ImageSource source) async { //프로필 사진 업로드 및 파베에 올리기
-     final image = await ImagePicker().pickImage(source: source);
-     if (image == null) return;
-     setState(() {
-       _image = File(image.path);
-     });
-     // 프로필 사진을 업로드할 경로와 파일명을 정의. 사용자의 uid를 이용하여 파일명의 중복 가능성 제거
-     Reference storageReference =
-     _firebaseStorage.ref().child("profile/${_user?.uid}");
-     // 파일 업로드
-     UploadTask storageUploadTask = storageReference.putFile(_image!);
-     // 파일 업로드 완료까지 대기
-     await storageUploadTask;
-     // 업로드한 사진의 URL 획득
-     String downloadURL = await storageReference.getDownloadURL();
-     // 업로드된 사진의 URL을 페이지에 반영
-     setState(() {
-       _profileImageURL = downloadURL;
-     });
-   }
+  Future _uploadImageToStorage(ImageSource source) async {
+    //프로필 사진 업로드 및 파베에 올리기
+    final image = await ImagePicker().pickImage(source: source);
+    if (image == null) return;
+    setState(() {
+      _image = File(image.path);
+    });
+    // 프로필 사진을 업로드할 경로와 파일명을 정의. 사용자의 uid를 이용하여 파일명의 중복 가능성 제거
+    Reference storageReference =
+    _firebaseStorage.ref().child("profile/${_user?.uid}");
+    // 파일 업로드
+    UploadTask storageUploadTask = storageReference.putFile(_image!);
+    // 파일 업로드 완료까지 대기
+    await storageUploadTask;
+    // 업로드한 사진의 URL 획득
+    String downloadURL = await storageReference.getDownloadURL();
+    // 업로드된 사진의 URL을 페이지에 반영
+    setState(() {
+      _profileImageURL = downloadURL;
+    });
+  }
 
 }
 
