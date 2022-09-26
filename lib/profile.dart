@@ -58,41 +58,41 @@ class _MyPageState extends State<MyPage> {
   }
   void _buttonAble () async{
     if(nameController.text != ""&&ageController.text != ""&&introduceController.text != ""){
-        final String name = nameController.text;
-        final String introduce = introduceController.text;
-        final String age = ageController.text;
-        final String? uid = _user?.uid;
-        final String instagram = instagramController.text;
-        final String twitter = twitterController.text;
-        final String facebook = facebookController.text;
-        final String naverblog = naverblogController.text;
-        if (_selectedGender[0] == true) {
-          gender = "man";
-        }
-        else if (_selectedGender[1] == true) {
-          gender = "woman";
-        }
-        await product.add({
-          'uid': uid,
-          'name': name,
-          'age': age,
-          'introduce': introduce,
-          'gender': gender,
-          'instagram': instagram,
-          'facebook': facebook,
-          'twitter': twitter,
-          'naverblog': naverblog
-        });
-        nameController.text = "";
-        ageController.text = "";
-        introduceController.text = "";
-        instagramController.text ="";
-        twitterController.text ="";
-        facebookController.text ="";
-        naverblogController.text ="";
-        Navigator.push(context, CupertinoPageRoute(
-            builder: (context) => mainscreen() //로그인 페이지
-        ));
+      final String name = nameController.text;
+      final String introduce = introduceController.text;
+      final String age = ageController.text;
+      final String? uid = _user?.uid;
+      final String instagram = instagramController.text;
+      final String twitter = twitterController.text;
+      final String facebook = facebookController.text;
+      final String naverblog = naverblogController.text;
+      if (_selectedGender[0] == true) {
+        gender = "man";
+      }
+      else if (_selectedGender[1] == true) {
+        gender = "woman";
+      }
+      await product.add({
+        'uid': uid,
+        'name': name,
+        'age': age,
+        'introduce': introduce,
+        'gender': gender,
+        'instagram': instagram,
+        'facebook': facebook,
+        'twitter': twitter,
+        'naverblog': naverblog
+      });
+      nameController.text = "";
+      ageController.text = "";
+      introduceController.text = "";
+      instagramController.text ="";
+      twitterController.text ="";
+      facebookController.text ="";
+      naverblogController.text ="";
+      Navigator.push(context, CupertinoPageRoute(
+          builder: (context) => MainPage() //로그인 페이지
+      ));
     }
     else {
       //필수항목을 입력해주세요 알림창
@@ -222,17 +222,31 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                       Pinned.fromPins(
-                        Pin(size: 29.0, start: 24.0),
+                        Pin(size: 200.0, start: 24.0),
                         Pin(size: 24.0, middle: 0.2314),
-                        child: Text(
-                          '이름',
-                          style: TextStyle(
-                            fontFamily: 'Source Han Sans KR',
-                            fontSize: 16,
-                            color: const Color(0xff191919),
-                            fontWeight: FontWeight.w500,
-                          ),
-                          softWrap: false,
+                        child: Row(
+                          children: [
+                            Text(
+                              '이름 ',
+                              style: TextStyle(
+                                fontFamily: 'Source Han Sans KR',
+                                fontSize: 16,
+                                color: const Color(0xff191919),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              softWrap: false,
+                            ),
+                            Text(
+                              '(필수)',
+                              style: TextStyle(
+                                fontFamily: 'Source Han Sans KR',
+                                fontSize: 16,
+                                color: const Color(0xffc5c5c5),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              softWrap: false,
+                            ),
+                          ],
                         ),
                       ),
                       Pinned.fromPins(
@@ -247,7 +261,7 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                       Pinned.fromPins(
-                        Pin(size: 106.0, start: 24.0),
+                        Pin(size: 200.0, start: 24.0),
                         Pin(size: 24.0, middle: 0.3318),
                         child: Text.rich(
                           TextSpan(
@@ -271,7 +285,7 @@ class _MyPageState extends State<MyPage> {
                                 ),
                               ),
                               TextSpan(
-                                text: '(수정불가) ',
+                                text: '( 필수, 수정불가 ) ',
                                 style: TextStyle(
                                   color: const Color(0xffc5c5c5),
                                 ),
@@ -283,7 +297,7 @@ class _MyPageState extends State<MyPage> {
                           softWrap: false,
                         ),
                       ),
-                      //** 성별 버튼 남 여
+                      ///** 성별 버튼 남 여
                       Pinned.fromPins(
                         Pin(size: 203.0, start: 25.0),
                         Pin(size: 48.0, middle: 0.3726),
@@ -319,7 +333,7 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                       Pinned.fromPins(
-                        Pin(size: 103.0, start: 24.0),
+                        Pin(size: 200.0, start: 24.0),
                         Pin(size: 24.0, middle: 0.4312),
                         child: Text.rich(
                           TextSpan(
@@ -343,7 +357,7 @@ class _MyPageState extends State<MyPage> {
                                 ),
                               ),
                               TextSpan(
-                                text: '(수정불가)',
+                                text: '( 필수, 수정불가)',
                                 style: TextStyle(
                                   color: const Color(0xffc5c5c5),
                                 ),
@@ -391,17 +405,31 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                       Pinned.fromPins(
-                        Pin(size: 59.0, start: 24.0),
+                        Pin(size: 200.0, start: 24.0),
                         Pin(size: 24.0, middle: 0.5316),
-                        child: Text(
-                          '자기소개',
-                          style: TextStyle(
-                            fontFamily: 'Source Han Sans KR',
-                            fontSize: 16,
-                            color: const Color(0xff191919),
-                            fontWeight: FontWeight.w500,
-                          ),
-                          softWrap: false,
+                        child: Row(
+                          children: [
+                            Text(
+                              '자기소개 ',
+                              style: TextStyle(
+                                fontFamily: 'Source Han Sans KR',
+                                fontSize: 16,
+                                color: const Color(0xff191919),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              softWrap: false,
+                            ),
+                            Text(
+                              '(필수)',
+                              style: TextStyle(
+                                fontFamily: 'Source Han Sans KR',
+                                fontSize: 16,
+                                color: const Color(0xffc5c5c5),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              softWrap: false,
+                            ),
+                          ],
                         ),
                       ),
                       //* 자기소개 TextField */
@@ -705,7 +733,7 @@ class _MyPageState extends State<MyPage> {
                             child: null,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xffededed),
+                            color: const Color(0xff1677ff),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
