@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import 'package:blackup/postList.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,18 @@ import 'makePage.dart';
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
+=======
+
+import 'package:blackup/postList.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:adobe_xd/pinned.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+>>>>>>> dcde4a3d9470a9d5885a859b7a0901ad04194568
   @override
   State<MainPage> createState() => _MainPageState();
 }
@@ -194,11 +207,15 @@ class _MainPageState extends State<MainPage> {
                 allowDrawingOutsideViewBox: true,
                 fit: BoxFit.fill,
               ),
+<<<<<<< HEAD
               onPressed: () {
                 Navigator.push(context, CupertinoPageRoute(
                     builder: (context) => MakePage() //로그인 페이지
                 ));
               },
+=======
+              onPressed: () {},
+>>>>>>> dcde4a3d9470a9d5885a859b7a0901ad04194568
             ),
             IconButton(
               icon: SvgPicture.string(
