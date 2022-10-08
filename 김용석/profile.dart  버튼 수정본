@@ -58,41 +58,41 @@ class _MyPageState extends State<MyPage> {
   }
   void _buttonAble () async{
     if(nameController.text != ""&&ageController.text != ""&&introduceController.text != ""){
-      final String name = nameController.text;
-      final String introduce = introduceController.text;
-      final String age = ageController.text;
-      final String? uid = _user?.uid;
-      final String instagram = instagramController.text;
-      final String twitter = twitterController.text;
-      final String facebook = facebookController.text;
-      final String naverblog = naverblogController.text;
-      if (_selectedGender[0] == true) {
-        gender = "man";
-      }
-      else if (_selectedGender[1] == true) {
-        gender = "woman";
-      }
-      await product.add({
-        'uid': uid,
-        'name': name,
-        'age': age,
-        'introduce': introduce,
-        'gender': gender,
-        'instagram': instagram,
-        'facebook': facebook,
-        'twitter': twitter,
-        'naverblog': naverblog
-      });
-      nameController.text = "";
-      ageController.text = "";
-      introduceController.text = "";
-      instagramController.text ="";
-      twitterController.text ="";
-      facebookController.text ="";
-      naverblogController.text ="";
-      Navigator.push(context, CupertinoPageRoute(
-          builder: (context) => MainPage() //로그인 페이지
-      ));
+        final String name = nameController.text;
+        final String introduce = introduceController.text;
+        final String age = ageController.text;
+        final String? uid = _user?.uid;
+        final String instagram = instagramController.text;
+        final String twitter = twitterController.text;
+        final String facebook = facebookController.text;
+        final String naverblog = naverblogController.text;
+        if (_selectedGender[0] == true) {
+          gender = "man";
+        }
+        else if (_selectedGender[1] == true) {
+          gender = "woman";
+        }
+        await product.add({
+          'uid': uid,
+          'name': name,
+          'age': age,
+          'introduce': introduce,
+          'gender': gender,
+          'instagram': instagram,
+          'facebook': facebook,
+          'twitter': twitter,
+          'naverblog': naverblog
+        });
+        nameController.text = "";
+        ageController.text = "";
+        introduceController.text = "";
+        instagramController.text ="";
+        twitterController.text ="";
+        facebookController.text ="";
+        naverblogController.text ="";
+        Navigator.push(context, CupertinoPageRoute(
+            builder: (context) => mainscreen() //로그인 페이지
+        ));
     }
     else {
       //필수항목을 입력해주세요 알림창

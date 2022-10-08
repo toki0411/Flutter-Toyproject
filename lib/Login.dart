@@ -5,6 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'naver_login/main_view_model_2.dart';
+import 'naver_login/naver_login.dart';
+import 'naver_login/naver_login_.dart';
+
 class MyHomePage extends StatefulWidget {
 
   const MyHomePage({Key? key}) : super(key: key);
@@ -15,6 +19,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final viewModel = MainViewModel(KakaoLogin());
+  //final viewModel_naver = MainViewModel2(NaverLogin());
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +90,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Pin(size: 49.0, middle: 0.6186),
             child: Container(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: ()  {
+                   SocialLogin().signInWithNaver();
+                },
                 child: Text(''),
                 style: ElevatedButton.styleFrom(
                     primary: Colors.green, elevation: 0.0),
@@ -282,6 +289,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
 
 const String _svg_oxqczl =
     '<svg viewBox="0.0 3.7 14.0 12.3" ><path transform="translate(0.0, -43.98)" d="M 13.51592826843262 49.34596633911133 C 12.63427257537842 48.51546478271484 11.86658477783203 47.71279144287109 10.24535942077637 47.62984466552734 C 8.937211990356445 47.57441711425781 8.340042114257812 48.34941101074219 7.117193222045898 48.37709045410156 C 5.979561328887939 48.40483856201172 6.064860343933105 47.51898574829102 3.704380035400391 47.76806640625 C 1.656898260116577 47.98947143554688 -0.1348452419042587 49.98265838623047 0.007319128140807152 52.77859497070312 C 0.1495622396469116 55.79586029052734 2.310854911804199 59.97573089599609 4.330060958862305 59.97573089599609 C 5.751940250396729 59.94797515869141 6.093371391296387 59.28376007080078 7.259436130523682 59.28376007080078 C 8.709749221801758 59.28376007080078 9.051022529602051 60.11402893066406 10.18857192993164 59.94797515869141 C 12.15083694458008 59.67137908935547 13.99936389923096 56.65388107299805 13.99936389923096 55.68515014648438 C 12.91867828369141 55.13141632080078 11.83807277679443 54.19028854370117 11.69590950012207 52.61238479614258 C 11.58209896087646 51.03449249267578 12.57748508453369 50.03793334960938 13.51592826843262 49.34596633911133" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>';

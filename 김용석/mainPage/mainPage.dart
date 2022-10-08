@@ -1,12 +1,8 @@
-
-import 'package:blackup/postList.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:crew_app/mainPage/postList.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'makePage.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -24,7 +20,7 @@ class _MainPageState extends State<MainPage> {
     _pageController.dispose();
     super.dispose();
   }
-  ///*** category Controller **//
+///*** category Controller **//
   final PageController _cultureCategoriesController = PageController();
   final PageController _sportsCategoriesController = PageController();
 
@@ -194,11 +190,7 @@ class _MainPageState extends State<MainPage> {
                 allowDrawingOutsideViewBox: true,
                 fit: BoxFit.fill,
               ),
-              onPressed: () {
-                Navigator.push(context, CupertinoPageRoute(
-                    builder: (context) => MakePage() //로그인 페이지
-                ));
-              },
+              onPressed: () {},
             ),
             IconButton(
               icon: SvgPicture.string(
@@ -267,162 +259,162 @@ class _MainPageState extends State<MainPage> {
                       width: 375.0,
                       height: 40,
                       child: Container(
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              Row(
-                                children: [
-                                  ///** 뮤지컬 버튼 **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          0,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '뮤지컬',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            Row(
+                              children: [
+                                ///** 뮤지컬 버튼 **//
+                                Container(
+                                  child: TextButton(onPressed: (){
+                                    if (_cultureCategoriesController.hasClients) {
+                                      _cultureCategoriesController.animateToPage(
+                                        0,
+                                        duration: const Duration(milliseconds: 400),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  },
+                                    child: Text(
+                                      '뮤지컬',
+                                      style: TextStyle(
+                                        fontFamily: 'Source Han Sans KR',
+                                        fontSize: 14,
+                                        color: const Color(0xff767676) ,
                                       ),
                                     ),
                                   ),
-                                  ///**  연극 버튼  **?/
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          1,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '연극',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
+                                ),
+                                ///**  연극 버튼  **?/
+                                Container(
+                                  child: TextButton(onPressed: (){
+                                    if (_cultureCategoriesController.hasClients) {
+                                      _cultureCategoriesController.animateToPage(
+                                        1,
+                                        duration: const Duration(milliseconds: 400),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  },
+                                    child: Text(
+                                      '연극',
+                                      style: TextStyle(
+                                        fontFamily: 'Source Han Sans KR',
+                                        fontSize: 14,
+                                        color: const Color(0xff767676) ,
                                       ),
                                     ),
                                   ),
-                                  ///** 전시 버튼 **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          2,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '전시',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
+                                ),
+                                ///** 전시 버튼 **//
+                                Container(
+                                  child: TextButton(onPressed: (){
+                                    if (_cultureCategoriesController.hasClients) {
+                                      _cultureCategoriesController.animateToPage(
+                                        2,
+                                        duration: const Duration(milliseconds: 400),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  },
+                                    child: Text(
+                                      '전시',
+                                      style: TextStyle(
+                                        fontFamily: 'Source Han Sans KR',
+                                        fontSize: 14,
+                                        color: const Color(0xff767676) ,
                                       ),
                                     ),
                                   ),
-                                  ///** 콘서트 버튼  **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          3,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '콘서트',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
+                                ),
+                                ///** 콘서트 버튼  **//
+                                Container(
+                                  child: TextButton(onPressed: (){
+                                    if (_cultureCategoriesController.hasClients) {
+                                      _cultureCategoriesController.animateToPage(
+                                        3,
+                                        duration: const Duration(milliseconds: 400),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  },
+                                    child: Text(
+                                      '콘서트',
+                                      style: TextStyle(
+                                        fontFamily: 'Source Han Sans KR',
+                                        fontSize: 14,
+                                        color: const Color(0xff767676) ,
                                       ),
                                     ),
                                   ),
-                                  ///** 클래식 버튼  **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          4,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '클래식',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
+                                ),
+                                ///** 클래식 버튼  **//
+                                Container(
+                                  child: TextButton(onPressed: (){
+                                    if (_cultureCategoriesController.hasClients) {
+                                      _cultureCategoriesController.animateToPage(
+                                        4,
+                                        duration: const Duration(milliseconds: 400),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  },
+                                    child: Text(
+                                      '클래식',
+                                      style: TextStyle(
+                                        fontFamily: 'Source Han Sans KR',
+                                        fontSize: 14,
+                                        color: const Color(0xff767676) ,
                                       ),
                                     ),
                                   ),
-                                  ///** 패스티벌 버튼 **?/
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          5,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '페스티벌',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
+                                ),
+                                ///** 패스티벌 버튼 **?/
+                                Container(
+                                  child: TextButton(onPressed: (){
+                                    if (_cultureCategoriesController.hasClients) {
+                                      _cultureCategoriesController.animateToPage(
+                                        5,
+                                        duration: const Duration(milliseconds: 400),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  },
+                                    child: Text(
+                                      '페스티벌',
+                                      style: TextStyle(
+                                        fontFamily: 'Source Han Sans KR',
+                                        fontSize: 14,
+                                        color: const Color(0xff767676) ,
                                       ),
                                     ),
                                   ),
-                                  ///** 기타 버튼  **///
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          6,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '기타',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
+                                ),
+                                ///** 기타 버튼  **///
+                                Container(
+                                  child: TextButton(onPressed: (){
+                                    if (_cultureCategoriesController.hasClients) {
+                                      _cultureCategoriesController.animateToPage(
+                                        6,
+                                        duration: const Duration(milliseconds: 400),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  },
+                                    child: Text(
+                                      '기타',
+                                      style: TextStyle(
+                                        fontFamily: 'Source Han Sans KR',
+                                        fontSize: 14,
+                                        color: const Color(0xff767676) ,
                                       ),
                                     ),
                                   ),
-                                ],
-                              )
-                            ],
-                          )
+                                ),
+                              ],
+                            )
+                          ],
+                        )
                       ),
                     ),
                     SizedBox(
@@ -431,35 +423,35 @@ class _MainPageState extends State<MainPage> {
                     ,
                     ///** 전체 메인페이지 글 목록 부분 *//
                     SizedBox(
-                        width: 375.0,
-                        height: 100.0,
-                        child: PageView(
-                          controller: _cultureCategoriesController,
-                          children: [
-                            ///** 뮤지컬 페이지 부분 **//
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            )
-                          ],
-                        )
+                      width: 375.0,
+                      height: 100.0,
+                      child: PageView(
+                        controller: _cultureCategoriesController,
+                        children: [
+                          ///** 뮤지컬 페이지 부분 **//
+                          Container(
+                            child: PostList(),
+                          ),
+                          Container(
+                            child: PostList(),
+                          ),
+                          Container(
+                            child: PostList(),
+                          ),
+                          Container(
+                            child: PostList(),
+                          ),
+                          Container(
+                            child: PostList(),
+                          ),
+                          Container(
+                            child: PostList(),
+                          ),
+                          Container(
+                            child: PostList(),
+                          )
+                        ],
+                      )
                     ),
                   ],
                 ),

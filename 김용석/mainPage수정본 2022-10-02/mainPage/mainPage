@@ -1,12 +1,11 @@
-
-import 'package:blackup/postList.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:crew_app/mainPage/anotherPage.dart';
+import 'package:crew_app/mainPage/culturePage.dart';
+import 'package:crew_app/mainPage/postList.dart';
+import 'package:crew_app/mainPage/sportsPage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'makePage.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -16,32 +15,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  ///**PageViewPage Controller **/
-  final PageController _pageController = PageController();
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-  ///*** category Controller **//
-  final PageController _cultureCategoriesController = PageController();
-  final PageController _sportsCategoriesController = PageController();
-
-
-  @override
-  void dispose2() {
-    _cultureCategoriesController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void dispose3() {
-    _sportsCategoriesController.dispose();
-    super.dispose();
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,13 +40,10 @@ class _MainPageState extends State<MainPage> {
                   ///** 전체 페이지 부분 *//
                   TextButton(
                     onPressed: () {
-                      if (_pageController.hasClients) {
-                        _pageController.animateToPage(
-                          0,
-                          duration: const Duration(milliseconds: 400),
-                          curve: Curves.easeInOut,
-                        );
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainPage()),
+                      );
                     },
                     child: const Text(
                       '전체',
@@ -92,13 +62,10 @@ class _MainPageState extends State<MainPage> {
                   ///** 문화예술 페이지 부분 *//
                   TextButton(
                     onPressed: () {
-                      if (_pageController.hasClients) {
-                        _pageController.animateToPage(
-                          1,
-                          duration: const Duration(milliseconds: 400),
-                          curve: Curves.easeInOut,
-                        );
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CulturePage()),
+                      );
                     },
                     child: const Text(
                       '문화예술',
@@ -117,13 +84,10 @@ class _MainPageState extends State<MainPage> {
                   ///** 스포츠 페이지 부분 *//
                   TextButton(
                     onPressed: () {
-                      if (_pageController.hasClients) {
-                        _pageController.animateToPage(
-                          2,
-                          duration: const Duration(milliseconds: 400),
-                          curve: Curves.easeInOut,
-                        );
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SportsPage()),
+                      );
                     },
                     child: const Text(
                       '스포츠',
@@ -142,13 +106,10 @@ class _MainPageState extends State<MainPage> {
                   ///** 기타 페이지 부분 *//
                   TextButton(
                     onPressed: () {
-                      if (_pageController.hasClients) {
-                        _pageController.animateToPage(
-                          3,
-                          duration: const Duration(milliseconds: 400),
-                          curve: Curves.easeInOut,
-                        );
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AnotherPage()),
+                      );
                     },
                     child: const Text(
                       '기타',
@@ -194,11 +155,7 @@ class _MainPageState extends State<MainPage> {
                 allowDrawingOutsideViewBox: true,
                 fit: BoxFit.fill,
               ),
-              onPressed: () {
-                Navigator.push(context, CupertinoPageRoute(
-                    builder: (context) => MakePage() //로그인 페이지
-                ));
-              },
+              onPressed: () {},
             ),
             IconButton(
               icon: SvgPicture.string(
@@ -224,17 +181,15 @@ class _MainPageState extends State<MainPage> {
         onTap: () {
           FocusScope.of(context).unfocus();
         },
-        child: PageView(
-          controller: _pageController,
-          children: <Widget>[
-            ///**전체페이지*//
+        child:
+          ///**전체페이지*//
             Pinned.fromPins(
               Pin(size: 375.0, middle: 0.5),
               Pin(start: 10.0, end: 0.0),
               child: SingleChildScrollView(
                 primary: false,
                 child: Column(
-                  children: [
+                  children: const [
                     ///** 전체 메인페이지 글 목록 부분
                     SizedBox(
                       width: 375.0,
@@ -253,465 +208,7 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-
-            ///**문화예술 페이지 **//
-            Pinned.fromPins(
-              Pin(size: 375.0, middle: 0.5),
-              Pin(start: 10.0, end: 0.0),
-              child: SingleChildScrollView(
-                primary: false,
-                child: Column(
-                  children: [
-                    ///** 하위 카테고리 버튼 **//
-                    SizedBox(
-                      width: 375.0,
-                      height: 40,
-                      child: Container(
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              Row(
-                                children: [
-                                  ///** 뮤지컬 버튼 **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          0,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '뮤지컬',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///**  연극 버튼  **?/
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          1,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '연극',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///** 전시 버튼 **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          2,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '전시',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///** 콘서트 버튼  **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          3,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '콘서트',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///** 클래식 버튼  **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          4,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '클래식',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///** 패스티벌 버튼 **?/
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          5,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '페스티벌',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///** 기타 버튼  **///
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_cultureCategoriesController.hasClients) {
-                                        _cultureCategoriesController.animateToPage(
-                                          6,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '기타',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          )
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    )
-                    ,
-                    ///** 전체 메인페이지 글 목록 부분 *//
-                    SizedBox(
-                        width: 375.0,
-                        height: 100.0,
-                        child: PageView(
-                          controller: _cultureCategoriesController,
-                          children: [
-                            ///** 뮤지컬 페이지 부분 **//
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            ),
-                            Container(
-                              child: PostList(),
-                            )
-                          ],
-                        )
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            ///**스포츠경기 *//
-            Pinned.fromPins(
-              Pin(size: 375.0, middle: 0.5),
-              Pin(start: 10.0, end: 0.0),
-              child: SingleChildScrollView(
-                primary: false,
-                child: Column(
-                  children: [
-                    ///** 하위 카테고리 버튼  **//
-                    SizedBox(
-                      width: 375.0,
-                      height: 40,
-                      child: Container(
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              Row(
-                                children: [
-                                  ///** 수영  **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_sportsCategoriesController.hasClients) {
-                                        _sportsCategoriesController.animateToPage(
-                                          0,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '수영',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///**  야구  **?/
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_sportsCategoriesController.hasClients) {
-                                        _sportsCategoriesController.animateToPage(
-                                          1,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '야구',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///** 축구 **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_sportsCategoriesController.hasClients) {
-                                        _sportsCategoriesController.animateToPage(
-                                          2,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '축구',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///** 농구 **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_sportsCategoriesController.hasClients) {
-                                        _sportsCategoriesController.animateToPage(
-                                          3,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '농구',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///** 미식축구  **//
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_sportsCategoriesController.hasClients) {
-                                        _sportsCategoriesController.animateToPage(
-                                          4,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '미식축구',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///** 양궁 **?/
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_sportsCategoriesController.hasClients) {
-                                        _sportsCategoriesController.animateToPage(
-                                          5,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '양궁',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ///** 복싱  **///
-                                  Container(
-                                    child: TextButton(onPressed: (){
-                                      if (_sportsCategoriesController.hasClients) {
-                                        _sportsCategoriesController.animateToPage(
-                                          6,
-                                          duration: const Duration(milliseconds: 400),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                      child: Text(
-                                        '복싱',
-                                        style: TextStyle(
-                                          fontFamily: 'Source Han Sans KR',
-                                          fontSize: 14,
-                                          color: const Color(0xff767676) ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          )
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    )
-                    ,
-                    ///** 전체 메인페이지 글 목록 부분 *//
-                    SizedBox(
-                        width: 375.0,
-                        height: 100.0,
-                        child: PageView(
-                          controller: _sportsCategoriesController,
-                          children: [
-                            ///** 수영 **//
-                            Container(
-                              child: PostList(),
-                            ),
-                            /// 야구
-                            Container(
-                              child: PostList(),
-                            ),
-                            ///  축구
-                            Container(
-                              child: PostList(),
-                            ),
-                            /// 농구
-                            Container(
-                              child: PostList(),
-                            ),
-                            /// 미식축구
-                            Container(
-                              child: PostList(),
-                            ),
-                            /// 양궁
-                            Container(
-                              child: PostList(),
-                            ),
-                            /// 복싱
-                            Container(
-                              child: PostList(),
-                            )
-                          ],
-                        )
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            ///**기타 **//
-            Pinned.fromPins(
-              Pin(size: 375.0, middle: 0.5),
-              Pin(start: 10.0, end: 0.0),
-              child: SingleChildScrollView(
-                primary: false,
-                child: Column(
-                  children: [
-                    ///** 전체 메인페이지 글 목록 부분
-                    SizedBox(
-                      width: 375.0,
-                      height: 100.0,
-                      child: PostList(),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: 375.0,
-                      height: 100.0,
-                      child: PostList(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+        //** 전체 메인페이지 글 목록 부분 *//
       ),
     );
   }
