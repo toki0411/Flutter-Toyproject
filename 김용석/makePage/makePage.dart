@@ -2,6 +2,7 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:group_button/group_button.dart';
+import 'package:categorized_dropdown/categorized_dropdown.dart';
 
 class MakePage extends StatefulWidget {
   const MakePage({Key? key}) : super(key: key);
@@ -11,8 +12,26 @@ class MakePage extends StatefulWidget {
 }
 
 class _MakePageState extends State<MakePage> {
-  ///** 나이 버튼 부분 **//
+  ///** 카테고리 부분  **///
+  final List<CategorizedDropdownItem<String>>? items = [
+    CategorizedDropdownItem(text: '문화예술', subItems: [
+      SubCategorizedDropdownItem(text: '뮤지컬', value: '뮤지컬'),
+      SubCategorizedDropdownItem(text: '연극', value: '연극'),
+      SubCategorizedDropdownItem(text: '콘서트', value: '콘서트'),
+    ]),
+    CategorizedDropdownItem(text: '스포츠 경기', subItems: [
+      SubCategorizedDropdownItem(text: '야구', value: '야구'),
+      SubCategorizedDropdownItem(text: '축구', value: '축구'),
+    ]),
+    CategorizedDropdownItem(text: '기타', value: '기타'),
+  ];
+  String? value;
+
+  ///** 나이 버튼 부분 **///
   RangeValues _ageRangeValues = const RangeValues(20, 100);
+
+  ///** 인원 버튼 부분 **///
+  double _personalValue = 20;
 
   ///** 날짜 선택 범위 **//
   DateTimeRange? _selectedDateRange;
@@ -35,8 +54,6 @@ class _MakePageState extends State<MakePage> {
       });
     }
   }
-
-  ///*** DropDownButton 값 *//
 
 
   @override
@@ -172,13 +189,24 @@ class _MakePageState extends State<MakePage> {
                         ),
                       ),
 
-                      ///** 카테고리버튼 부분 태그 버튼 */
+                      ///** 카테고리버튼 부분 태그 버튼 **//
                       Pinned.fromPins(Pin(size: 300.0, start: 24.0),
-                          Pin(size: 34.0, middle: 0.2437),
-                          child: Row(
-                            children: [
-
-                            ],
+                          Pin(size: 45.0, middle: 0.2347),
+                          child: Container(
+                            child:
+                            CategorizedDropdown(
+                              items: items,
+                              value: value,
+                              hint: const Text('카테고리를 선택해 주세요',
+                              style: TextStyle(
+                                fontSize: 13
+                              ),),
+                              onChanged: (v) {
+                                setState(() {
+                                  value = value;
+                                });
+                              },
+                            ),
                           )),
                       Pinned.fromPins(
                         Pin(size: 330.0, start: 25),
@@ -399,6 +427,7 @@ class _MakePageState extends State<MakePage> {
                             SizedBox(
                               height: 20,
                             ),
+
                             ///** 나이 선택 부분 **//
                             Align(
                               alignment: Alignment.topLeft,
@@ -407,7 +436,7 @@ class _MakePageState extends State<MakePage> {
                                 children: [
                                   Container(
                                     child: Text(
-                                      '나이',
+                                      '나이 ${_ageRangeValues.start.round()}살 부터 ${_ageRangeValues.end.round()}살까지',
                                       style: TextStyle(
                                         fontFamily: 'Source Han Sans KR',
                                         fontSize: 18,
@@ -417,6 +446,7 @@ class _MakePageState extends State<MakePage> {
                                       softWrap: false,
                                     ),
                                   ),
+
                                   ///*** 나이 슬라이드 버튼 부분 **//
                                   RangeSlider(
                                     activeColor: const Color(0xff1677ff),
@@ -431,6 +461,28 @@ class _MakePageState extends State<MakePage> {
                                     onChanged: (RangeValues values) {
                                       setState(() {
                                         _ageRangeValues = values;
+                                      });
+                                    },
+                                  ),
+                                  ///** 인원 선택 버튼 ** ///
+                                  Text(
+                                    '인원 ${_personalValue.round()}명',
+                                    style: TextStyle(
+                                      fontFamily: 'Source Han Sans KR',
+                                      fontSize: 18,
+                                      color: const Color(0xff191919),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    softWrap: false,
+                                  ),
+                                  Slider(
+                                    value: _personalValue,
+                                    max: 100,
+                                    divisions: 100,
+                                    label: _personalValue.round().toString(),
+                                    onChanged: (double value) {
+                                      setState(() {
+                                        _personalValue = value;
                                       });
                                     },
                                   )
