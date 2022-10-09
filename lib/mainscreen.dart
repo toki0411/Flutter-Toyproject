@@ -1,37 +1,27 @@
-<<<<<<< HEAD
-
+import 'package:blackup/models/FireModel.dart';
+import 'package:blackup/models/FireService.dart';
 import 'package:blackup/postList.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'makePage.dart';
-
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
-
-=======
-
-import 'package:blackup/postList.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:adobe_xd/pinned.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:blackup/models/FireService.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
->>>>>>> dcde4a3d9470a9d5885a859b7a0901ad04194568
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<MainPage> createState() => _MainPageState1();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState1 extends State<MainPage> {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Map<String, dynamic> all_data = Map<String, dynamic>();
+  List<Map<String, dynamic>> a=[];
+  int alength=0;
   ///**PageViewPage Controller **/
   final PageController _pageController = PageController();
-
   @override
   void dispose() {
     _pageController.dispose();
@@ -54,8 +44,6 @@ class _MainPageState extends State<MainPage> {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,6 +61,7 @@ class _MainPageState extends State<MainPage> {
             IconButton(icon: Icon(Icons.notifications), onPressed: null),
           ],
           bottom: PreferredSize(
+            preferredSize: Size.fromHeight(50),
             child: Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -176,8 +165,8 @@ class _MainPageState extends State<MainPage> {
                 ],
               ),
             ),
-            preferredSize: Size.fromHeight(50),
-          )),
+          )
+      ),
 
       ///** 하단 AppBar **/
       bottomNavigationBar: BottomAppBar(
@@ -207,15 +196,7 @@ class _MainPageState extends State<MainPage> {
                 allowDrawingOutsideViewBox: true,
                 fit: BoxFit.fill,
               ),
-<<<<<<< HEAD
-              onPressed: () {
-                Navigator.push(context, CupertinoPageRoute(
-                    builder: (context) => MakePage() //로그인 페이지
-                ));
-              },
-=======
               onPressed: () {},
->>>>>>> dcde4a3d9470a9d5885a859b7a0901ad04194568
             ),
             IconButton(
               icon: SvgPicture.string(
@@ -241,6 +222,7 @@ class _MainPageState extends State<MainPage> {
         onTap: () {
           FocusScope.of(context).unfocus();
         },
+
         child: PageView(
           controller: _pageController,
           children: <Widget>[
@@ -254,18 +236,156 @@ class _MainPageState extends State<MainPage> {
                   children: [
                     ///** 전체 메인페이지 글 목록 부분
                     SizedBox(
-                      width: 375.0,
-                      height: 100.0,
-                      child: PostList(),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: 375.0,
-                      height: 100.0,
-                      child: PostList(),
-                    ),
+                      height: 390,
+                      child: FutureBuilder<List<FireModel>>(
+                        future: FireService().getFireModels(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<FireModel> datas = snapshot.data!;
+                            return ListView.builder(
+                                itemCount: datas.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  FireModel data = datas[index];
+
+                                  return Column(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment(0.171, -0.928),
+                                          child: SizedBox(
+                                            width: 135.0,
+                                            height: 24.0,
+                                            child: Text(
+                                              '${data.title}',
+                                              style: TextStyle(
+                                                fontFamily: 'Source Han Sans KR',
+                                                fontSize: 16,
+                                                color: const Color(0xff191919),
+                                                letterSpacing: -0.4,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              softWrap: false,
+                                            ),
+                                          ),
+                                        ),
+
+                                        ///***메인페이지 title날짜 부분
+                                        Align(
+                                          alignment: Alignment(0.00, -0.2),
+                                          child: SizedBox(
+                                            width: 95.0,
+                                            height: 17.0,
+                                            child: Text(
+                                              '${data.place} · ${data.date}',
+                                              style: TextStyle(
+                                                fontFamily: 'Source Han Sans KR',
+                                                fontSize: 12,
+                                                color: const Color(0xff999999),
+                                                letterSpacing: -0.30000000000000004,
+                                              ),
+                                              softWrap: false,
+                                            ),
+                                          ),
+                                        ),
+
+                                        ///** 태그 부분 **//
+                                        Align(
+                                          alignment: Alignment(0.1, 0.928),
+                                          child: SizedBox(
+                                              width: 139.0,
+                                              height: 34.0,
+                                              child: Row(
+                                                children: [
+                                                  TextButton(
+                                                    onPressed: () {},
+                                                    child: Text(
+                                                      '여자',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Source Han Sans KR',
+                                                        fontSize: 12,
+                                                        color: const Color(
+                                                            0xff767676),
+                                                      ),
+                                                    ),
+                                                    style: TextButton.styleFrom(
+                                                        minimumSize: Size.zero,
+                                                        padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            6, 2, 2, 6),
+                                                        backgroundColor:
+                                                        const Color(0xfff7f7f7),
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                            BorderRadius.circular(
+                                                                5))),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 3,
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {},
+                                                    child: Text(
+                                                      '남자',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Source Han Sans KR',
+                                                        fontSize: 12,
+                                                        color: const Color(
+                                                            0xff767676),
+                                                      ),
+                                                    ),
+                                                    style: TextButton.styleFrom(
+                                                        minimumSize: Size.zero,
+                                                        padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            6, 2, 2, 6),
+                                                        backgroundColor:
+                                                        const Color(0xfff7f7f7),
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                            BorderRadius.circular(
+                                                                5))),
+                                                  ),
+                                                ],
+                                              )),
+                                        ),
+
+                                        ///*** 인원 표시 부분 **//
+                                        Align(
+                                          alignment: Alignment(0.7, 0.928),
+                                          child: SizedBox(
+                                              width: 40.0,
+                                              height: 34.0,
+                                              child: Row(
+                                                children: [
+
+                                                  ///** 사람이미지 **//
+                                                  SvgPicture.string(
+                                                    '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                    allowDrawingOutsideViewBox: true,
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                  Text(
+                                                    '${data.people}/${data
+                                                        .totalPeople}',
+                                                    style: TextStyle(
+                                                        fontSize: 13
+                                                    ),
+                                                  )
+                                                ],
+                                              )),
+                                        ),
+
+                                        ///***이미지부분 안댐**//
+                                      ]
+                                  );
+
+                                }
+                            );
+                          } else {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+                        },
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -449,32 +569,1108 @@ class _MainPageState extends State<MainPage> {
                     ///** 전체 메인페이지 글 목록 부분 *//
                     SizedBox(
                         width: 375.0,
-                        height: 100.0,
+                        height: 500.0,
                         child: PageView(
                           controller: _cultureCategoriesController,
                           children: [
                             ///** 뮤지컬 페이지 부분 **//
-                            Container(
-                              child: PostList(),
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="musical")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            Container(
-                              child: PostList(),
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="theater")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            Container(
-                              child: PostList(),
+                            ///** 전시 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="exhibition")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            Container(
-                              child: PostList(),
+                            ///** 콘서트 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="concert")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            Container(
-                              child: PostList(),
+                            ///** 클래식 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="classic")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            Container(
-                              child: PostList(),
+                            ///** 페스티벌 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="festival")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            Container(
-                              child: PostList(),
-                            )
+                            ///** 기타 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="cultureEtc")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
                           ],
                         )
                     ),
@@ -661,38 +1857,1109 @@ class _MainPageState extends State<MainPage> {
                     ///** 전체 메인페이지 글 목록 부분 *//
                     SizedBox(
                         width: 375.0,
-                        height: 100.0,
+                        height: 500.0,
                         child: PageView(
                           controller: _sportsCategoriesController,
                           children: [
-                            ///** 수영 **//
-                            Container(
-                              child: PostList(),
+                            ///** 수영 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="swimming")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            /// 야구
-                            Container(
-                              child: PostList(),
+                            ///** 야구 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="baseball")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            ///  축구
-                            Container(
-                              child: PostList(),
+                            ///** 축구 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="soccer")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            /// 농구
-                            Container(
-                              child: PostList(),
+                            ///** 농구 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="basketball")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            /// 미식축구
-                            Container(
-                              child: PostList(),
+                            ///** 미식축구 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="football")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            /// 양궁
-                            Container(
-                              child: PostList(),
+                            ///** 양궁 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="archery")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            /// 복싱
-                            Container(
-                              child: PostList(),
-                            )
+                            ///** 복싱 페이지 부분 **//
+                            Column(
+                              children: [
+                                ///** 전체 메인페이지 글 목록 부분
+                                SizedBox(
+                                  height: 500,
+                                  child: FutureBuilder<List<FireModel>>(
+                                    future: FireService().getFireModels(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        List<FireModel> datas = snapshot.data!;
+                                        return ListView.builder(
+                                            itemCount: datas.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                              FireModel data = datas[index];
+                                              return Column(
+                                                  children: [
+                                                    if(data.category=="boxing")...[
+                                                      Align(
+                                                        alignment: Alignment(0.171, -0.928),
+                                                        child: SizedBox(
+                                                          width: 135.0,
+                                                          height: 24.0,
+                                                          child: Text(
+                                                            '${data.title}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 16,
+                                                              color: const Color(0xff191919),
+                                                              letterSpacing: -0.4,
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///***메인페이지 title날짜 부분
+                                                      Align(
+                                                        alignment: Alignment(0.00, -0.2),
+                                                        child: SizedBox(
+                                                          width: 95.0,
+                                                          height: 17.0,
+                                                          child: Text(
+                                                            '${data.place} · ${data.date}',
+                                                            style: TextStyle(
+                                                              fontFamily: 'Source Han Sans KR',
+                                                              fontSize: 12,
+                                                              color: const Color(0xff999999),
+                                                              letterSpacing: -0.30000000000000004,
+                                                            ),
+                                                            softWrap: false,
+                                                          ),
+                                                        ),
+                                                      ),
+
+                                                      ///** 태그 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.1, 0.928),
+                                                        child: SizedBox(
+                                                            width: 139.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '여자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 3,
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () {},
+                                                                  child: Text(
+                                                                    '남자',
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'Source Han Sans KR',
+                                                                      fontSize: 12,
+                                                                      color: const Color(
+                                                                          0xff767676),
+                                                                    ),
+                                                                  ),
+                                                                  style: TextButton.styleFrom(
+                                                                      minimumSize: Size.zero,
+                                                                      padding:
+                                                                      EdgeInsets.fromLTRB(
+                                                                          6, 2, 2, 6),
+                                                                      backgroundColor:
+                                                                      const Color(0xfff7f7f7),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              5))),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///*** 인원 표시 부분 **//
+                                                      Align(
+                                                        alignment: Alignment(0.7, 0.928),
+                                                        child: SizedBox(
+                                                            width: 40.0,
+                                                            height: 34.0,
+                                                            child: Row(
+                                                              children: [
+
+                                                                ///** 사람이미지 **//
+                                                                SvgPicture.string(
+                                                                  '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                                  allowDrawingOutsideViewBox: true,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                                Text(
+                                                                  '${data.people}/${data
+                                                                      .totalPeople}',
+                                                                  style: TextStyle(
+                                                                      fontSize: 13
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )),
+                                                      ),
+
+                                                      ///***이미지부분 안댐**//
+                                                    ]
+                                                  ]
+                                              );
+                                            }
+                                        );
+                                      } else {
+                                        return const Center(child: CircularProgressIndicator());
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
                           ],
                         )
                     ),
@@ -711,18 +2978,158 @@ class _MainPageState extends State<MainPage> {
                   children: [
                     ///** 전체 메인페이지 글 목록 부분
                     SizedBox(
-                      width: 375.0,
-                      height: 100.0,
-                      child: PostList(),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: 375.0,
-                      height: 100.0,
-                      child: PostList(),
-                    ),
+                      height: 500,
+                      child: FutureBuilder<List<FireModel>>(
+                        future: FireService().getFireModels(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<FireModel> datas = snapshot.data!;
+                            return ListView.builder(
+                                itemCount: datas.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  FireModel data = datas[index];
+
+                                  return Column(
+                                      children: [
+                                        if(data.category=="etc")...[
+                                          Align(
+                                            alignment: Alignment(0.171, -0.928),
+                                            child: SizedBox(
+                                              width: 135.0,
+                                              height: 24.0,
+                                              child: Text(
+                                                '${data.title}',
+                                                style: TextStyle(
+                                                  fontFamily: 'Source Han Sans KR',
+                                                  fontSize: 16,
+                                                  color: const Color(0xff191919),
+                                                  letterSpacing: -0.4,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                softWrap: false,
+                                              ),
+                                            ),
+                                          ),
+
+                                          ///***메인페이지 title날짜 부분
+                                          Align(
+                                            alignment: Alignment(0.00, -0.2),
+                                            child: SizedBox(
+                                              width: 95.0,
+                                              height: 17.0,
+                                              child: Text(
+                                                '${data.place} · ${data.date}',
+                                                style: TextStyle(
+                                                  fontFamily: 'Source Han Sans KR',
+                                                  fontSize: 12,
+                                                  color: const Color(0xff999999),
+                                                  letterSpacing: -0.30000000000000004,
+                                                ),
+                                                softWrap: false,
+                                              ),
+                                            ),
+                                          ),
+
+                                          ///** 태그 부분 **//
+                                          Align(
+                                            alignment: Alignment(0.1, 0.928),
+                                            child: SizedBox(
+                                                width: 139.0,
+                                                height: 34.0,
+                                                child: Row(
+                                                  children: [
+                                                    TextButton(
+                                                      onPressed: () {},
+                                                      child: Text(
+                                                        '여자',
+                                                        style: TextStyle(
+                                                          fontFamily: 'Source Han Sans KR',
+                                                          fontSize: 12,
+                                                          color: const Color(
+                                                              0xff767676),
+                                                        ),
+                                                      ),
+                                                      style: TextButton.styleFrom(
+                                                          minimumSize: Size.zero,
+                                                          padding:
+                                                          EdgeInsets.fromLTRB(
+                                                              6, 2, 2, 6),
+                                                          backgroundColor:
+                                                          const Color(0xfff7f7f7),
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  5))),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 3,
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () {},
+                                                      child: Text(
+                                                        '남자',
+                                                        style: TextStyle(
+                                                          fontFamily: 'Source Han Sans KR',
+                                                          fontSize: 12,
+                                                          color: const Color(
+                                                              0xff767676),
+                                                        ),
+                                                      ),
+                                                      style: TextButton.styleFrom(
+                                                          minimumSize: Size.zero,
+                                                          padding:
+                                                          EdgeInsets.fromLTRB(
+                                                              6, 2, 2, 6),
+                                                          backgroundColor:
+                                                          const Color(0xfff7f7f7),
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  5))),
+                                                    ),
+                                                  ],
+                                                )),
+                                          ),
+
+                                          ///*** 인원 표시 부분 **//
+                                          Align(
+                                            alignment: Alignment(0.7, 0.928),
+                                            child: SizedBox(
+                                                width: 40.0,
+                                                height: 34.0,
+                                                child: Row(
+                                                  children: [
+
+                                                    ///** 사람이미지 **//
+                                                    SvgPicture.string(
+                                                      '<svg viewBox="0.0 0.0 12.0 12.0" ><path transform="translate(0.0, 0.0)" d="M 6 5.797101974487305 C 5.175000190734863 5.797101974487305 4.5 5.526570796966553 3.975000143051147 4.985507488250732 C 3.450000047683716 4.44444465637207 3.1875 3.74879264831543 3.1875 2.898550987243652 C 3.1875 2.048309326171875 3.450000047683716 1.352657079696655 3.975000143051147 0.8115941882133484 C 4.5 0.2705314159393311 5.175000190734863 0 6 0 C 6.825000286102295 0 7.5 0.2705314159393311 8.02500057220459 0.8115941882133484 C 8.550000190734863 1.352657079696655 8.8125 2.048309326171875 8.8125 2.898550987243652 C 8.8125 3.74879264831543 8.550000190734863 4.44444465637207 8.02500057220459 4.985507488250732 C 7.5 5.526570796966553 6.825000286102295 5.797101974487305 6 5.797101974487305 M 0 12.00000095367432 L 0 10.1835765838623 C 0 9.693914413452148 0.1188750043511391 9.275362968444824 0.3562500178813934 8.92753791809082 C 0.593625009059906 8.579710960388184 0.9000000357627869 8.315749168395996 1.274999976158142 8.135266304016113 C 2.112375020980835 7.748792171478271 2.915625095367432 7.458938121795654 3.684375047683716 7.265700817108154 C 4.453125 7.072464942932129 5.224874973297119 6.975846290588379 6 6.975846290588379 C 6.775125026702881 6.975846290588379 7.543875217437744 7.07555627822876 8.30625057220459 7.275363445281982 C 9.068625450134277 7.475169658660889 9.868874549865723 7.761547088623047 10.70625019073486 8.135266304016113 C 11.09362602233887 8.315749168395996 11.40637493133545 8.579710960388184 11.64375019073486 8.92753791809082 C 11.88112545013428 9.275362968444824 12 9.693914413452148 12 10.1835765838623 L 12 12.00000095367432 L 0 12.00000095367432 Z" fill="#767676" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>',
+                                                      allowDrawingOutsideViewBox: true,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                    Text(
+                                                      '${data.people}/${data
+                                                          .totalPeople}',
+                                                      style: TextStyle(
+                                                          fontSize: 13
+                                                      ),
+                                                    )
+                                                  ],
+                                                )),
+                                          ),
+
+                                          ///***이미지부분 안댐**//
+                                        ]
+                                      ]
+                                  );
+
+                                }
+                            );
+                          } else {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+                        },
+                      ),
+                    )
                   ],
                 ),
               ),
