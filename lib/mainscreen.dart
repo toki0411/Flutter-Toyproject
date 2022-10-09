@@ -191,9 +191,7 @@ class _MainPageState extends State<MainPage> {
                 fit: BoxFit.fill,
               ),
               onPressed: () {
-                Navigator.push(context, CupertinoPageRoute(
-                    builder: (context) => MakePage()
-                ));
+
               },
             ),
             IconButton(
@@ -203,7 +201,9 @@ class _MainPageState extends State<MainPage> {
                 fit: BoxFit.fill,
               ),
               onPressed: () {
-                MakePage();
+                Navigator.push(context, CupertinoPageRoute(
+                    builder: (context) => MakePage()
+                ));
               },
             ),
             IconButton(
