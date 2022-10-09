@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:blackup/models/FireModel.dart';
 import 'package:adobe_xd/pinned.dart';
+import 'package:categorized_dropdown/categorized_dropdown.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -21,6 +22,21 @@ class MakePage extends StatefulWidget {
 }
 
 class _MakePageState extends State<MakePage> {
+  ///** 카테고리 부분  **///
+  final List<CategorizedDropdownItem<String>>? items = [
+    CategorizedDropdownItem(text: '문화예술', subItems: [
+      SubCategorizedDropdownItem(text: '뮤지컬', value: '뮤지컬'),
+      SubCategorizedDropdownItem(text: '연극', value: '연극'),
+      SubCategorizedDropdownItem(text: '콘서트', value: '콘서트'),
+    ]),
+    CategorizedDropdownItem(text: '스포츠 경기', subItems: [
+      SubCategorizedDropdownItem(text: '야구', value: '야구'),
+      SubCategorizedDropdownItem(text: '축구', value: '축구'),
+    ]),
+    CategorizedDropdownItem(text: '기타', value: '기타'),
+  ];
+  String? _selectedCategory;
+
   File? _image;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User? _user;
@@ -34,8 +50,8 @@ class _MakePageState extends State<MakePage> {
   final TextEditingController contentsController = TextEditingController();
   late GroupButtonController _genderController;
   late GroupButtonController _regionController;
-  late final String gender;
-  late final String region;
+  String? gender;
+  String? region;
   late final String age=_ageRangeValues.toString();
 
 
@@ -56,6 +72,8 @@ class _MakePageState extends State<MakePage> {
   }
   ///** 나이 버튼 부분 **//
   RangeValues _ageRangeValues = const RangeValues(20, 100);
+  ///** 인원 버튼 부분 **///
+  double _personalValue = 1;
 
   ///** 날짜 선택 범위 **//
   DateTimeRange? _selectedDateRange;
@@ -90,12 +108,25 @@ class _MakePageState extends State<MakePage> {
     region=_buttons[index];
   }
   void _buttonAble () async{
-    if(titleController.text != ""&&contentsController.text!=""){
+    if(_imageURL==""){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('사진을 추가해주세요.'),
+        ),
+      );
+    }
+    if(titleController.text != ""&&_selectedCategory!=null&&gender!=null&&region!=null){
       final String title = titleController.text;
       final String contents = contentsController.text;
       final String? uid = _user?.uid;
-      late final String? startdate=_selectedDateRange?.start.toString().split(' ')[0];
-      late final String? enddate=_selectedDateRange?.end.toString().split(' ')[0];
+      final String? startdate=_selectedDateRange?.start.toString().split(' ')[0];
+      final String? enddate=_selectedDateRange?.end.toString().split(' ')[0];
+      if(startdate==null&&enddate==null){ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('날짜를 입력해주세요.'),
+        ),
+      );}
+
       var F=0; var M=0;
       if(gender=='누구나'){F=1;M=1;}
       else if(gender=='남자'){M=1;}
@@ -109,27 +140,25 @@ class _MakePageState extends State<MakePage> {
           image: _imageURL,
           date: _date,
           people: 1,  //현재 인원수
-          place: region,
+          place: region,  //지역
           title: title,
           contents: contents,
-          totalPeople: 2,
-          category: "",
+          totalPeople: _personalValue.toInt(),
+          category: _selectedCategory,
           age: age,
           reference: reference
       );
-
       await product.add(_fireModel.toJson());
-
       titleController.text = "";
       contentsController.text = "";
-
       Navigator.pop(context);
     }
+
     else {
-      //필수항목을 입력해주세요 알림창
+      //모든항목을 입력해주세요 알림창
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('필수 항목을 입력해주세요.'),
+          content: Text('모든 항목을 입력해주세요.'),
         ),
       );
     }
@@ -192,23 +221,6 @@ class _MakePageState extends State<MakePage> {
                     children: <Widget>[
                       ///** 사진 적용 버튼 */
                       Pinned.fromPins(
-                        Pin(size: 85.0, start: 24.0),
-                        Pin(size: 85.0, start: 125.0),
-                        child: Container(
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: const Color(0x29000000),
-                                    elevation: 0),
-                                onPressed: () { _uploadImageToStorage(
-                                    ImageSource.gallery);},
-                                child: Text(''))
-                          // decoration: BoxDecoration(
-                          //   color: const Color(0xfff7f7f7),
-                          //   borderRadius: BorderRadius.circular(10.0),
-                          // ),
-                        ),
-                      ),
-                      Pinned.fromPins(
                         Pin(size: 22.0, start: 56.0),
                         Pin(size: 20.0, start: 158.0),
                         child: Stack(
@@ -218,14 +230,9 @@ class _MakePageState extends State<MakePage> {
                                 Padding(
                                   padding:
                                   EdgeInsets.fromLTRB(0.0, 0.0, 0.6, 0.6),
-
                                   ///** 사진모양 이미지 부분 */
                                   child: SizedBox.expand(
                                       child: SvgPicture.string(
-                                        // backgroundImage:
-                                        // (_image != null)
-                                        //     ? FileImage(_image!) as ImageProvider
-                                        //     : NetworkImage(""),
                                         _svg_e7kd7s,
                                         allowDrawingOutsideViewBox: true,
                                         fit: BoxFit.fill,
@@ -237,13 +244,31 @@ class _MakePageState extends State<MakePage> {
                         ),
                       ),
                       Pinned.fromPins(
-                        Pin(start: 24.0, end: 24.0),
-                        Pin(size: 1.0, start: 274.0),
+                        Pin(size: 85.0, start: 24.0),
+                        Pin(size: 85.0, start: 125.0),
                         child: Container(
-                          color: const Color(0xffdbdbdb),
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: (_image != null)? FileImage(_image!) as ImageProvider : NetworkImage("")  // 배경 이미지
+                                  ),),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: const Color(0x29000000),
+                                    elevation: 0),
+                                onPressed: () { _uploadImageToStorage(
+                                    ImageSource.gallery);},
+                                child: Text(''))
                         ),
                       ),
 
+                      // Pinned.fromPins(
+                      //   Pin(start: 24.0, end: 24.0),
+                      //   Pin(size: 1.0, start: 274.0),
+                      //   child: Container(
+                      //     color: const Color(0xffdbdbdb),
+                      //   ),
+                      // ),
                       ///** 제목을 입력하는 TextField 부분 */
                       Pinned.fromPins(Pin(size: 329.0, start: 24.0),
                           Pin(size: 26.0, start: 250.0),
@@ -276,13 +301,24 @@ class _MakePageState extends State<MakePage> {
                         ),
                       ),
 
-                      ///** 카테고리버튼 부분 태그 버튼 */
+                      // ///** 카테고리버튼 부분 태그 버튼 **//
                       Pinned.fromPins(Pin(size: 300.0, start: 24.0),
-                          Pin(size: 34.0, middle: 0.2437),
-                          child: Row(
-                            children: [
-
-                            ],
+                          Pin(size: 45.0, middle: 0.2347),
+                          child: Container(
+                            child:
+                            CategorizedDropdown(
+                              items: items,
+                              value: _selectedCategory,
+                              hint: const Text('카테고리를 선택해 주세요',
+                                style: TextStyle(
+                                    fontSize: 13
+                                ),),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _selectedCategory = value ?? "";
+                                });
+                              },
+                            ),
                           )),
                       Pinned.fromPins(
                         Pin(size: 330.0, start: 25),
@@ -515,7 +551,7 @@ class _MakePageState extends State<MakePage> {
                                 children: [
                                   Container(
                                     child: Text(
-                                      '나이',
+                                      '나이 ${_ageRangeValues.start.round()}살 부터 ${_ageRangeValues.end.round()}살까지',
                                       style: TextStyle(
                                         fontFamily: 'Source Han Sans KR',
                                         fontSize: 18,
@@ -539,6 +575,28 @@ class _MakePageState extends State<MakePage> {
                                     onChanged: (RangeValues values) {
                                       setState(() {
                                         _ageRangeValues = values;
+                                      });
+                                    },
+                                  ),
+                                  ///** 인원 선택 버튼 ** ///
+                                  Text(
+                                    '인원 ${_personalValue.round()}명',
+                                    style: TextStyle(
+                                      fontFamily: 'Source Han Sans KR',
+                                      fontSize: 18,
+                                      color: const Color(0xff191919),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    softWrap: false,
+                                  ),
+                                  Slider(
+                                    value: _personalValue,
+                                    max: 3,
+                                    divisions: 3,
+                                    label: _personalValue.round().toString(),
+                                    onChanged: (double value) {
+                                      setState(() {
+                                        _personalValue = value;
                                       });
                                     },
                                   )
@@ -588,6 +646,7 @@ class _MakePageState extends State<MakePage> {
   }
 
 }
+
 
 const String _svg_e7kd7s =
     '<svg viewBox="0.0 0.0 21.4 19.4" ><path  d="M 10.71801376342773 15.48022556304932 C 12.00417613983154 15.48022556304932 13.08508777618408 15.03955078125 13.96021270751953 14.15874195098877 C 14.83534049987793 13.27793121337891 15.27317142486572 12.19000339508057 15.27317142486572 10.89548969268799 C 15.27317142486572 9.583175659179688 14.83534049987793 8.490928649902344 13.96021270751953 7.618751049041748 C 13.08508777618408 6.746572971343994 12.00417613983154 6.310752391815186 10.71801376342773 6.310752391815186 C 9.414167404174805 6.310752391815186 8.32896900177002 6.746572971343994 7.462417125701904 7.618751049041748 C 6.595866203308105 8.490928649902344 6.162858486175537 9.583175659179688 6.162858486175537 10.89548969268799 C 6.162858486175537 12.19000339508057 6.595866203308105 13.27793121337891 7.462417125701904 14.15874195098877 C 8.32896900177002 15.03955078125 9.414167404174805 15.48022556304932 10.71801376342773 15.48022556304932 M 1.607702136039734 19.41769981384277 C 1.17898166179657 19.41769981384277 0.8038510680198669 19.25588989257812 0.4823106527328491 18.93226051330566 C 0.1607702076435089 18.6086311340332 0 18.2310619354248 0 17.79956245422363 L 0 3.964447498321533 C 0 3.550742864608765 0.1607702076435089 3.178030490875244 0.4823106527328491 2.845232963562012 C 0.8038510680198669 2.512434720993042 1.17898166179657 2.34630560874939 1.607702136039734 2.34630560874939 L 5.546572685241699 2.34630560874939 L 7.502609729766846 0 L 13.93342018127441 0 L 15.88945865631104 2.34630560874939 L 19.82832717895508 2.34630560874939 C 20.23936080932617 2.34630560874939 20.60967063903809 2.512434720993042 20.94032096862793 2.845232963562012 C 21.27096939086914 3.178030490875244 21.43602752685547 3.550742864608765 21.43602752685547 3.964447498321533 L 21.43602752685547 17.79956245422363 C 21.43602752685547 18.2310619354248 21.27096939086914 18.6086311340332 20.94032096862793 18.93226051330566 C 20.60967063903809 19.25588989257812 20.23936080932617 19.41769981384277 19.82832717895508 19.41769981384277 L 1.607702136039734 19.41769981384277 Z" fill="#999999" stroke="none" stroke-width="1" stroke-miterlimit="10" stroke-linecap="butt" /></svg>';
