@@ -22,7 +22,6 @@ class MainViewModel {
         'uid': user!.id.toString(),
         'displayName': user!.kakaoAccount!.profile!.nickname,
         'email': user!.kakaoAccount!.email!,
-        'photoURL': user!.kakaoAccount!.profile!.profileImageUrl!,
       });
 
       await FirebaseAuth.instance.signInWithCustomToken(token);  //파이어베이스와 연결

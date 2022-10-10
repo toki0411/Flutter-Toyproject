@@ -6,8 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 import 'Login.dart';
+import 'mainscreen.dart';
 
 
 class Loading extends StatefulWidget{
@@ -81,7 +84,9 @@ class _Loading extends State<Loading> {
 
   @override
   void initState() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    var _Result=[];
+    final firestore = FirebaseFirestore.instance;
+    FirebaseAuth.instance.authStateChanges().listen((User? user) async{
       if (user == null) {
         Timer(Duration(milliseconds: 2000), () {
           Navigator.push(context, CupertinoPageRoute(
@@ -89,14 +94,30 @@ class _Loading extends State<Loading> {
           ));
         });
       } else {
-        Timer(Duration(milliseconds: 2000), () {
-          Navigator.push(context, CupertinoPageRoute(
-              builder: (context) => MyPage()  //홈화면
-          ));
+        var result = await firestore.collection('profile').where("uid", isEqualTo: user.uid).get().then((QuerySnapshot querySnapshot) => {
+          querySnapshot.docs.forEach((doc) {
+            _Result.add(doc.data()); //모든 document 정보를 리스트에 저장.
+          })
         });
+        if (_Result.isNotEmpty) {
+          print(_Result);
+          Timer(Duration(milliseconds: 2000), () {
+            Navigator.push(context, CupertinoPageRoute(
+                builder: (context) => MainPage() //홈화면
+            ));
+          });
+        }
+        else {
+          Timer(Duration(milliseconds: 2000), () {
+            Navigator.push(context, CupertinoPageRoute(
+                builder: (context) => MyPage() //홈화면
+            ));
+          });
+        }
       }
+
     });
-}
+  }
 }
 
 

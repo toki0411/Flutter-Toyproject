@@ -19,7 +19,26 @@ exports.createCustomToken = functions.https.onRequest(async (request, response) 
 
     const updateParams = { //정보의 재가공
         email: user.email,
-        photoURL: user.photoURL,
+        displayName: user.displayName,
+    };
+
+    try{  //기존 계정이 있는 경우, 바뀐 것들을 업데이트
+        await admin.auth().updateUser(uid, updateParams);  //uid의 유저의 정보를 위의 업데이트 함수로 업데이트
+    } catch(e){ //uid 유저 정보 없을때 (처음 접속 시)
+        updateParams["uid"] = uid;
+        await admin.auth().createUser(updateParams);
+    }
+    const token = await admin.auth().createCustomToken(uid); //토큰생성
+
+     response.send(token);
+ });
+
+exports.createCustomToken_n = functions.https.onRequest(async (request, response) => {
+  const user = request.body;
+  const uid = `naver:${user.uid}`;
+
+    const updateParams = { //정보의 재가공
+        email: user.email,
         displayName: user.displayName,
     };
 
