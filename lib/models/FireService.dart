@@ -14,21 +14,28 @@ class FireService{
   }
 
   //READ 각각의 데이터를 콕 집어서 가져올때
-  Future<FireModel> getFireModel(String userKey) async{
-    DocumentReference<Map<String, dynamic>> documentReference=
-    FirebaseFirestore.instance.collection("post").doc(userKey);
-    final DocumentSnapshot<Map<String, dynamic>> documentSnapshot=
-    await documentReference.get();
-    final fireModel=FireModel.fromSnapShot(documentSnapshot);
-    return fireModel;
+  Future<List<FireModel>> getFireModel(String userKey) async{
+    CollectionReference<Map<String, dynamic>>collectionReference=
+    FirebaseFirestore.instance.collection("post");
+    QuerySnapshot<Map<String, dynamic>> querySnapshot=
+    await collectionReference.orderBy("create").get();
+
+    List<FireModel> postList =[];
+    for(var doc in querySnapshot.docs){
+      FireModel fireModel = FireModel.fromQuerySnapshot(doc);
+      if(fireModel.category=="${userKey}") {
+        postList.add(fireModel);
+      }
+    }
+    return postList;
   }
 
   //READ 컬렉션 내 모든 데이터를 가져 올때
   Future<List<FireModel>> getFireModels()async{
     CollectionReference<Map<String, dynamic>>collectionReference=
-        FirebaseFirestore.instance.collection("post");
+    FirebaseFirestore.instance.collection("post");
     QuerySnapshot<Map<String, dynamic>> querySnapshot=
-        await collectionReference.orderBy("create").get();
+    await collectionReference.orderBy("create").get();
 
     List<FireModel> postList =[];
     for(var doc in querySnapshot.docs){
@@ -45,4 +52,3 @@ class FireService{
     await reference.set(json);
   }
 }
-
