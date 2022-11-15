@@ -198,6 +198,7 @@ class _DetailPageState extends State<DetailPage> {
                                         ),
                                         flex: 6,
                                       ),
+
                                       ///사람 이미지 부분
                                       Expanded(
                                         child: Row(
@@ -207,19 +208,21 @@ class _DetailPageState extends State<DetailPage> {
                                               allowDrawingOutsideViewBox: true,
                                               fit: BoxFit.fill,
                                             ),
+
                                             ///인원 부분
                                             Text(
                                               '1/4',
                                               style: TextStyle(
-                                                fontFamily: 'Source Han Sans KR',
+                                                fontFamily:
+                                                    'Source Han Sans KR',
                                                 fontSize: 12,
                                                 color: const Color(0xff767676),
-                                                letterSpacing: -0.30000000000000004,
+                                                letterSpacing:
+                                                    -0.30000000000000004,
                                                 fontWeight: FontWeight.w500,
                                               ),
                                               softWrap: false,
                                             )
-
                                           ],
                                         ),
                                         flex: 1,
@@ -235,29 +238,18 @@ class _DetailPageState extends State<DetailPage> {
 
                       ///상세페이지 내용 부분
                       Container(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: 300.0,
+                        height: 300,
+                        width: 375,
+                        padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                        child: Text(
+                          '부산국제록페스티벌 일요일에 같이 가실 분을 구합니다! \n입장하기 전에 밥 같이 먹고 뒷풀이도 해요ㅎㅎ \n사진같이 찍고 신나게 즐겨요~~ \n저는 백예린 팬입니다 \n백예린 팬분들 많이 참여해 주세요^^\n ',
+                          style: TextStyle(
+                            fontFamily: 'Source Han Sans KR',
+                            fontSize: 14,
+                            color: const Color(0xff191919),
+                            letterSpacing: -0.35000000000000003,
                           ),
-                          child: Scrollbar(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.vertical,
-                              reverse: true,
-                              child: TextField(
-                                controller: contentsController,
-                                decoration: InputDecoration(
-                                  enabledBorder: InputBorder.none,
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  fillColor: const Color(0xfff7f7f7),
-                                  filled: true,
-                                ),
-                                minLines: 10,
-                                maxLines: null,
-                                maxLength: 300,
-                              ),
-                            ),
-                          ),
+                          softWrap: false,
                         ),
                       ),
                     ],
@@ -277,6 +269,7 @@ class _DetailPageState extends State<DetailPage> {
           ///키보드 올라갈시 숨김
           Visibility(
             visible: !keyboardIsOpen,
+
             /// 좋아요 하트 버튼
             child: FloatingActionButton(
               child: Icon(
@@ -297,6 +290,7 @@ class _DetailPageState extends State<DetailPage> {
               ///키보드 올라갈시 숨김
               child: Visibility(
                 visible: !keyboardIsOpen,
+
                 /// 참여하기 버튼
                 child: FloatingActionButton.extended(
                   backgroundColor: Color(0xff1677ff),
