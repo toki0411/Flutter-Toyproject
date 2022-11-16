@@ -15,6 +15,7 @@ class _EventPageState extends State<EventPage> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: -3,
+        /// 뒤로가기 버튼 ///
         leading: Icon(
           Icons.arrow_back_sharp,
           color: Colors.black,
@@ -45,6 +46,7 @@ class _EventPageState extends State<EventPage> {
               height: 1000,
               child: Column(
                 children: [
+                  /// 알림 영역 부분 ///
                   Container(
                       width: double.infinity,
                       color: const Color(0xfff5fafe),
@@ -58,6 +60,7 @@ class _EventPageState extends State<EventPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                /// 참여요청  ///
                                 Text(
                                   '참여 요청',
                                   style: TextStyle(
@@ -68,6 +71,7 @@ class _EventPageState extends State<EventPage> {
                                   ),
                                   softWrap: false,
                                 ),
+                                /// 방금전 ///
                                 Text(
                                   '방금 전',
                                   style: TextStyle(
@@ -80,6 +84,7 @@ class _EventPageState extends State<EventPage> {
                                 ),
                               ],
                             ),
+                            /// 요청 도착문 //
                             Text.rich(
                               TextSpan(
                                 style: TextStyle(
@@ -88,6 +93,7 @@ class _EventPageState extends State<EventPage> {
                                   color: const Color(0xff191919),
                                   letterSpacing: -0.35000000000000003,
                                 ),
+                                /// 부산국제 페스티벌 //
                                 children: [
                                   TextSpan(
                                     text: '부산국제록페스티벌 ',
@@ -95,6 +101,7 @@ class _EventPageState extends State<EventPage> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
+                                  /// 참여요청이 도착하였습니다. ///
                                   TextSpan(
                                     text: '참여 요청이 도착했습니다.',
                                   ),
@@ -107,6 +114,7 @@ class _EventPageState extends State<EventPage> {
                           ],
                         ),
                       )),
+                  ///두번쨰 알림 부분 ///
                   Container(
                       width: double.infinity,
                       height: 95,
