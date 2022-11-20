@@ -111,146 +111,142 @@ class _ChattingRoomListPageState extends State<ChattingRoomListPage> {
           FocusScope.of(context).unfocus();
         },
         child: Center(
-          child: SingleChildScrollView(
-            primary: false,
             child: Container(
+              height: 600,
               width: 375,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                      height: 600,
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          /// 채팅 목록 부분 ///
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            width: 375,
-                            height: 60,
-                            child: Stack(
+                  child: Container(
+                          height: 600,
+                          padding: EdgeInsets.all(10),
+                          child: SingleChildScrollView(
+                            primary: false,
+                            child: Column(
                               children: [
-                                Positioned(
-                                    child: SizedBox(
-                                      height:60,
-                                      width:60,
-                                      /// 사진 부분 ///
-                                      child: CircleAvatar(
+                                /// 채팅 목록 부분 ///
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                  width: 375,
+                                  height: 60,
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                          child: SizedBox(
+                                            height:60,
+                                            width:60,
+                                            /// 사진 부분 ///
+                                            child: CircleAvatar(
+                                            ),
+                                          )),
+                                      Positioned(
+                                        top: -5,
+                                        left: 65,
+                                          child: TextButton(
+                                              onPressed: (){},
+                                              child: Row(
+                                                children: [
+                                                  /// 타이틀 부분 제목 ///
+                                                  Text(
+                                                    '부산국제록페스티벌',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Source Han Sans KR',
+                                                      fontSize: 16,
+                                                      color: const Color(0xff191919),
+                                                      letterSpacing: -0.4,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                    softWrap: false,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  /// 방 인원 ///
+                                                  Text(
+                                                    '4',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Source Han Sans KR',
+                                                      fontSize: 14,
+                                                      color: const Color(0xff999999),
+                                                      letterSpacing: -0.5,
+                                                    ),
+                                                    softWrap: false,
+                                                  )
+                                                ],
+                                              )),
                                       ),
-                                    )),
-                                Positioned(
-                                  top: -5,
-                                  left: 65,
-                                    child: TextButton(
-                                        onPressed: (){},
-                                        child: Row(
-                                          children: [
-                                            /// 타이틀 부분 제목 ///
-                                            Text(
-                                              '부산국제록페스티벌',
-                                              style: TextStyle(
-                                                fontFamily: 'Source Han Sans KR',
-                                                fontSize: 16,
-                                                color: const Color(0xff191919),
-                                                letterSpacing: -0.4,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                              softWrap: false,
+                                      Positioned(
+                                        left: 74,
+                                          top: 32,
+                                          /// 채팅 내용 부분 ///
+                                          child: Text(
+                                            '안녕하세요 반갑습니다~',
+                                            style: TextStyle(
+                                              fontFamily: 'Source Han Sans KR',
+                                              fontSize: 14,
+                                              color: const Color(0xff999999),
+                                              letterSpacing: -0.35000000000000003,
                                             ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            /// 방 인원 ///
-                                            Text(
-                                              '4',
-                                              style: TextStyle(
-                                                fontFamily: 'Source Han Sans KR',
-                                                fontSize: 14,
-                                                color: const Color(0xff999999),
-                                                letterSpacing: -0.5,
-                                              ),
-                                              softWrap: false,
-                                            )
-                                          ],
-                                        )),
-                                ),
-                                Positioned(
-                                  left: 74,
-                                    top: 32,
-                                    /// 채팅 내용 부분 ///
-                                    child: Text(
-                                      '안녕하세요 반갑습니다~',
-                                      style: TextStyle(
-                                        fontFamily: 'Source Han Sans KR',
-                                        fontSize: 14,
-                                        color: const Color(0xff999999),
-                                        letterSpacing: -0.35000000000000003,
+                                            softWrap: false,
+                                          )
                                       ),
-                                      softWrap: false,
-                                    )
-                                ),
-                                Positioned(
-                                  right: 6,
-                                    top: 15,
-                                    child: SizedBox(
-                                      width: 30,
-                                      height: 35,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Container(
-                                            child:
-                                                /// 날짜 부분 ///
-                                            Text(
-                                              '15:29',
-                                              style: TextStyle(
-                                                fontFamily: 'Source Han Sans KR',
-                                                fontSize: 10,
-                                                color: const Color(0xff999999),
-                                                letterSpacing: -0.25,
-                                              ),
-                                              softWrap: false,
-                                            ),
-                                          ),
-                                          Container(
-                                            alignment: Alignment.center,
-                                            width: 18,
-                                            height: 18,
-                                            decoration: BoxDecoration(
-                                              color: Color(0xff1677ff),
-                                              shape: BoxShape.circle
+                                      Positioned(
+                                        right: 6,
+                                          top: 15,
+                                          child: SizedBox(
+                                            width: 30,
+                                            height: 35,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Container(
+                                                  child:
+                                                      /// 날짜 부분 ///
+                                                  Text(
+                                                    '15:29',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Source Han Sans KR',
+                                                      fontSize: 10,
+                                                      color: const Color(0xff999999),
+                                                      letterSpacing: -0.25,
+                                                    ),
+                                                    softWrap: false,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  alignment: Alignment.center,
+                                                  width: 18,
+                                                  height: 18,
+                                                  decoration: BoxDecoration(
+                                                    color: Color(0xff1677ff),
+                                                    shape: BoxShape.circle
 
+                                                  ),
+                                                  child:
+                                                      /// 동그라미 숫자 부분 ///
+                                                  Text(
+                                                    '3',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Source Han Sans KR',
+                                                      fontSize: 12,
+                                                      color: const Color(0xffffffff),
+                                                      letterSpacing: -0.30000000000000004,
+                                                    ),
+                                                    softWrap: false,
+                                                  )
+                                                ),
+                                              ],
                                             ),
-                                            child:
-                                                /// 동그라미 숫자 부분 ///
-                                            Text(
-                                              '3',
-                                              style: TextStyle(
-                                                fontFamily: 'Source Han Sans KR',
-                                                fontSize: 12,
-                                                color: const Color(0xffffffff),
-                                                letterSpacing: -0.30000000000000004,
-                                              ),
-                                              softWrap: false,
-                                            )
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                )
+                                          )
+                                      )
 
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
+                        ),
+                ),
             ),
-          ),
         ),
-      ),
     );
   }
 }
