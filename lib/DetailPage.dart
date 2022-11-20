@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'editPage.dart';
 import 'models/FireModel.dart';
 import 'models/FireService.dart';
+import 'models/RegisterModel.dart';
 _DetailPageState? pageState;
 class DetailPage extends StatefulWidget {
   final FireModel fireModel;
@@ -44,6 +45,19 @@ class _DetailPageState extends State<DetailPage> {
       name = data['name'];
       CreaterProfileImage = data['image'];
     }
+  }
+  void sendRegister()async{  //참여 신청하기 누르면
+    CollectionReference product = FirebaseFirestore.instance.collection('register');
+    DocumentReference? reference;
+    RegisterModel registerModel = RegisterModel(
+        from: _user,
+        to: widget.fireModel.create,
+        title: widget.fireModel.title,
+        contents: "hello~",
+        curstate: 0,
+        reference: reference
+    );
+    await product.add(registerModel.toJson());
   }
   @override
   Widget build(BuildContext context) {
@@ -115,6 +129,9 @@ class _DetailPageState extends State<DetailPage> {
               onSelected: (value) {
                 if (value == 0) {  //모집완료
                   print("My account menu is selected.");
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                    return EditPage(fireModel:fireModel);
+                  }));
                 } else if (value == 1) {  //수정
                   Navigator.of(context).push(MaterialPageRoute(builder: (_){
                     return EditPage(fireModel:fireModel);
