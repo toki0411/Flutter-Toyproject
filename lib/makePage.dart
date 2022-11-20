@@ -76,26 +76,8 @@ class _MakePageState extends State<MakePage> {
   double _personalValue = 1;
 
   ///** 날짜 선택 범위 **//
-  DateTimeRange? _selectedDateRange;
+  DateTime _selectedDate = DateTime.now();
 
-  void _show() async {
-    final DateTimeRange? result = await showDateRangePicker(
-      context: context,
-      locale: Locale('ko', 'KO'),
-      firstDate: DateTime(2022, 1, 1),
-      lastDate: DateTime(2030, 12, 31),
-      currentDate: DateTime.now(),
-      saveText: 'Done',
-    );
-
-    if (result != null) {
-      // Rebuild the UI
-      print(result.start.toString());
-      setState(() {
-        _selectedDateRange = result;
-      });
-    }
-  }
   void onSelectecMethodgender(dynamic value, index, selected) {
     _genderController.selectIndex(index);
     const _buttons=['누구나', '남자', '여자'];
@@ -108,31 +90,43 @@ class _MakePageState extends State<MakePage> {
     region=_buttons[index];
   }
   void _buttonAble () async{
-    if(_imageURL==""){
+    if(_image==""){
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('사진을 추가해주세요.'),
         ),
       );
     }
-    if(titleController.text != ""&&_selectedCategory!=null&&gender!=null&&region!=null){
+    else if(titleController.text != ""&&_selectedCategory!=null&&gender!=null&&region!=null){
       final String title = titleController.text;
       final String contents = contentsController.text;
       final String? uid = _user?.uid;
-      final String? startdate=_selectedDateRange?.start.toString().split(' ')[0];
-      final String? enddate=_selectedDateRange?.end.toString().split(' ')[0];
-      if(startdate==null&&enddate==null){ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('날짜를 입력해주세요.'),
-        ),
-      );}
+      //final String? startdate=_selectedDateRange.start.toString().split(' ')[0];
+      //final String? enddate=_selectedDateRange.end.toString().split(' ')[0];
+      // if(startdate==null&&enddate==null){ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('날짜를 입력해주세요.'),
+      //   ),
+      // );}
 
       var F=0; var M=0;
       if(gender=='누구나'){F=1;M=1;}
       else if(gender=='남자'){M=1;}
       else if(gender=='여자'){F=1;}
+
+      // 사진을 업로드할 경로와 파일명을 정의. 사용자의 uid를 이용하여 파일명의 중복 가능성 제거${_Result.length+1}
+      Reference storageReference = _firebaseStorage.ref().child("post/${_user?.uid}_${DateTime.now()}");
+      // 파일 업로드
+      UploadTask storageUploadTask = storageReference.putFile(_image!);
+      // 파일 업로드 완료까지 대기
+      await storageUploadTask;
+      // 업로드한 사진의 URL 획득
+      String downloadURL = await storageReference.getDownloadURL();
+      // 업로드된 사진의 URL을 페이지에 반영
+      _imageURL = downloadURL;
+
       DocumentReference? reference;
-      var _date=startdate!+"~"+enddate!;
+      var _date=_selectedDate.toString().split(' ')[0];
       FireModel _fireModel = FireModel(
           create: uid,
           female: F,
@@ -153,7 +147,6 @@ class _MakePageState extends State<MakePage> {
       contentsController.text = "";
       Navigator.pop(context);
     }
-
     else {
       //모든항목을 입력해주세요 알림창
       ScaffoldMessenger.of(context).showSnackBar(
@@ -261,14 +254,6 @@ class _MakePageState extends State<MakePage> {
                                 child: Text(''))
                         ),
                       ),
-
-                      // Pinned.fromPins(
-                      //   Pin(start: 24.0, end: 24.0),
-                      //   Pin(size: 1.0, start: 274.0),
-                      //   child: Container(
-                      //     color: const Color(0xffdbdbdb),
-                      //   ),
-                      // ),
                       ///** 제목을 입력하는 TextField 부분 */
                       Pinned.fromPins(Pin(size: 329.0, start: 24.0),
                           Pin(size: 26.0, start: 250.0),
@@ -410,13 +395,24 @@ class _MakePageState extends State<MakePage> {
                                   children: [
                                     ///** 날짜 버튼 **///
                                     TextButton(
-                                      onPressed: _show,
+                                      onPressed: (){
+                                        Future<DateTime?> future = showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(2022, 1, 1),
+                                        lastDate: DateTime(2030, 12, 31),
+                                        );
+                                        future.then((date){
+                                          setState((){
+                                            _selectedDate = date!;
+                                          });
+                                        });
+                                      },
                                       child: Text('선택하기'),
                                     ),
-
-                                    ///** 시작 날짜 **//
+                                    ///** 날짜 **//
                                     Text(
-                                      "시작 날짜: ${_selectedDateRange?.start.toString().split(' ')[0]}",
+                                      "${_selectedDate.toString().split(' ')[0]}",
                                       style: const TextStyle(
                                         fontFamily: 'Source Han Sans KR',
                                         fontSize: 18,
@@ -424,17 +420,6 @@ class _MakePageState extends State<MakePage> {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-
-                                    ///** 끝나는 날짜 **//
-                                    Text(
-                                      "종료 날짜: ${_selectedDateRange?.end.toString().split(' ')[0]}",
-                                      style: const TextStyle(
-                                        fontFamily: 'Source Han Sans KR',
-                                        fontSize: 18,
-                                        color: const Color(0xff191919),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    )
                                   ],
                                 )),
                             SizedBox(
@@ -471,6 +456,7 @@ class _MakePageState extends State<MakePage> {
                                   border: Border.all(
                                       color: const Color(0xffdbdbdb))),
                               child: GroupButton(
+                                controller: _regionController,
                                 buttons: const [
                                   '서울',
                                   '경기',
@@ -479,7 +465,7 @@ class _MakePageState extends State<MakePage> {
                                   '대전',
                                   '세종',
                                   '충남',
-                                  '중북',
+                                  '충북',
                                   '부산',
                                   '울산',
                                   '경남',
@@ -623,25 +609,6 @@ class _MakePageState extends State<MakePage> {
     if (image == null) return;
     setState(() {
       _image = File(image.path);
-    });
-    var _cnt=0;
-    final firestore = FirebaseFirestore.instance;
-
-    var result = await firestore.collection('post').where("uid", isEqualTo: _user?.uid).get().then((QuerySnapshot querySnapshot) => {
-      _cnt=querySnapshot.docs.length});
-
-    // 사진을 업로드할 경로와 파일명을 정의. 사용자의 uid를 이용하여 파일명의 중복 가능성 제거${_Result.length+1}
-    Reference storageReference =
-    _firebaseStorage.ref().child("post/${_user?.uid}_${_cnt + 1}");
-    // 파일 업로드
-    UploadTask storageUploadTask = storageReference.putFile(_image!);
-    // 파일 업로드 완료까지 대기
-    await storageUploadTask;
-    // 업로드한 사진의 URL 획득
-    String downloadURL = await storageReference.getDownloadURL();
-    // 업로드된 사진의 URL을 페이지에 반영
-    setState(() {
-      _imageURL = downloadURL;
     });
   }
 
