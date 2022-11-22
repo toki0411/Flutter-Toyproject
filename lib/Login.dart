@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'kakao_login/kakao_login_logout.dart';
 import 'kakao_login/main_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import 'naver_login/main_view_model_2.dart';
 import 'naver_login/naver_login.dart';
 import 'naver_login/naver_login_.dart';
@@ -16,7 +16,22 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
+Future<UserCredential> signInWithGoogle() async {
+  // Trigger the authentication flow
+  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
+  // Obtain the auth details from the request
+  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+  // Create a new credential
+  final credential = GoogleAuthProvider.credential(
+    accessToken: googleAuth?.accessToken,
+    idToken: googleAuth?.idToken,
+  );
+
+  // Once signed in, return the UserCredential
+  return await FirebaseAuth.instance.signInWithCredential(credential);
+}
 class _MyHomePageState extends State<MyHomePage> {
   final viewModel = MainViewModel(KakaoLogin());
   //final viewModel_naver = MainViewModel2(NaverLogin());
@@ -91,7 +106,8 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Container(
               child: ElevatedButton(
                 onPressed: ()  {
-                   SocialLogin().signInWithNaver();
+                   //SocialLogin().signInWithNaver();
+                  signInWithGoogle();
                 },
                 child: Text(''),
                 style: ElevatedButton.styleFrom(
