@@ -350,6 +350,25 @@ class _DetailPageState extends State<DetailPage> {
                   backgroundColor: Color(0xff1677ff),
                   elevation: 0.0,
                   onPressed: () {},
+                  /// onPressed 이걸로 변경하면 텍스트 필드 올라옵니당 ///
+                     // onPressed: () => showDialog<String>(
+                  //   context: context,
+                  //   builder: (BuildContext context) => AlertDialog(
+                  //     content: TextField(
+                  //       decoration: InputDecoration(
+                  //         hintText: "본인 소개 또는 일정에 관한 내용을 작성해 주세요"
+                  //       ),
+                  //     ),
+                  //     alignment: Alignment.bottomCenter,
+                  //     actionsAlignment: MainAxisAlignment.center,
+                  //     actions: <Widget>[
+                  //       TextButton(
+                  //         onPressed: () {},
+                  //         child: const Text('참여 신청하기'),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   label: Padding(
                     padding: EdgeInsets.fromLTRB(95, 0, 95, 0),
                     child: Text(
