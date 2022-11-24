@@ -14,7 +14,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
   /// PageView Page 컨트롤 ///
   final PageController _pageController = PageController();
   /// 신고하기 TextField  알림 창 부분 ///
-  Future openDialog() => showDialog(
+  openDialog() => showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text("신고하기"),
