@@ -39,13 +39,13 @@ class _Loading extends State<Loading> {
           ),
           Center(
             child: SizedBox(
-              width: 230.0,
-              height: 151.0,
+              width: 220.0,
+              height: 75.0,
               child: Stack(
                 children: <Widget>[
                   Pinned.fromPins(
-                    Pin(start: 0.0, end: 0.0),
-                    Pin(size: 64.5, end: 0.0),
+                    Pin(start: 52.0, end: 52.0),
+                    Pin(size: 32.0, end: 0.0),
                     child: SvgPicture.string(
                       _svg_yl36,
                       allowDrawingOutsideViewBox: true,
@@ -53,8 +53,8 @@ class _Loading extends State<Loading> {
                     ),
                   ),
                   Pinned.fromPins(
-                    Pin(size: 67.4, start: 26.2),
-                    Pin(size: 67.4, start: 0.0),
+                    Pin(size: 37.4, start: 66.2),
+                    Pin(size: 37.4, start: 0.0),
                     child: SvgPicture.string(
                       _svg_o4gi71,
                       allowDrawingOutsideViewBox: true,
@@ -62,15 +62,14 @@ class _Loading extends State<Loading> {
                     ),
                   ),
                   Pinned.fromPins(
-                    Pin(size: 67.4, end: 33.2),
-                    Pin(size: 67.4, start: 0.0),
+                    Pin(size: 37.4, end: 66.2),
+                    Pin(size: 37.4, start: 0.0),
                     child: SvgPicture.string(
                       _svg_me32hg,
                       allowDrawingOutsideViewBox: true,
                       fit: BoxFit.fill,
                     ),
                   ),
-
                 ],
               ),
             ),
