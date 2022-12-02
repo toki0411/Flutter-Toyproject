@@ -394,7 +394,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                                 children: [
                                   Container(
                                       width: 375,
-                                      height: 100,
+                                      height: 300,
                                       color: Colors.blue,
                                       child: FutureBuilder<
                                           List<FireModel>>(
@@ -422,12 +422,15 @@ class _ProfileDetailState extends State<ProfileDetail> {
                                                           /// 이미지 부분 ///
                                                           Positioned(
                                                             child: Container(
+                                                              width: 100,
+                                                              height: 100,
                                                               child: ClipRRect(
                                                                 borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                     10),
                                                                 child: Image(
+                                                                  fit: BoxFit.fill,
                                                                   image: NetworkImage(
                                                                       '${data.image}'),
                                                                 ),
@@ -493,7 +496,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                                 children: [
                                   Container(
                                       width: 375,
-                                      height: 100,
+                                      height: 300,
                                       color: Colors.blue,
                                       child: FutureBuilder<
                                           List<FireModel>>(
@@ -521,12 +524,15 @@ class _ProfileDetailState extends State<ProfileDetail> {
                                                           /// 이미지 부분 ///
                                                           Positioned(
                                                             child: Container(
+                                                              width: 100,
+                                                              height: 100,
                                                               child: ClipRRect(
                                                                 borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                     10),
                                                                 child: Image(
+                                                                  fit: BoxFit.fill,
                                                                   image: NetworkImage(
                                                                       '${data.image}'),
                                                                 ),
