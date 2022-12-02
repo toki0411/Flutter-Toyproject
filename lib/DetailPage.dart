@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'package:blackup/profileDetail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,9 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   var name;
   var CreaterProfileImage;
+  var username;
+  var userProfileImage;
+  final TextEditingController contentsController = TextEditingController();
   bool key = false;
   User? _user;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -35,6 +39,14 @@ class _DetailPageState extends State<DetailPage> {
     if(_user?.uid==widget.fireModel.create){
       key = true;
     }
+    Query<Map<String, dynamic>>collectionReference= FirebaseFirestore.instance.collection("profile").where("uid", isEqualTo: '${_user?.uid}');
+    QuerySnapshot<Map<String, dynamic>> querySnapshot= await collectionReference.get();
+
+    for(var doc in querySnapshot.docs){
+      var data = doc.data();
+      username = data['name'];
+      userProfileImage = data['image'];
+    }
   }
   void getProfile() async{
     Query<Map<String, dynamic>>collectionReference= FirebaseFirestore.instance.collection("profile").where("uid", isEqualTo: '${widget.fireModel.create}');
@@ -45,23 +57,30 @@ class _DetailPageState extends State<DetailPage> {
       name = data['name'];
       CreaterProfileImage = data['image'];
     }
+    setState(() {
+    });
   }
   void sendRegister()async{  //참여 신청하기 누르면
     CollectionReference product = FirebaseFirestore.instance.collection('register');
     DocumentReference? reference;
     RegisterModel registerModel = RegisterModel(
-        from: _user,
+        from: _user?.uid,
+        fromname: username,
+        fromprofileimage: userProfileImage,
         to: widget.fireModel.create,
         title: widget.fireModel.title,
-        contents: "hello~",
+        contents: contentsController.text,
         curstate: 0,
         reference: reference
     );
     await product.add(registerModel.toJson());
+    Navigator.of(context).pop();
+
   }
   @override
   Widget build(BuildContext context) {
     final FireModel fireModel = widget.fireModel;
+
     ///키보드 올라올시 floating action button 아래위치
     final bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
@@ -186,8 +205,21 @@ class _DetailPageState extends State<DetailPage> {
                                   child: Container(
                                     child: Row(
                                       children: [
-                                        CircleAvatar(
+                                        IconButton(
+                                        icon: CircleAvatar(
                                           backgroundImage: NetworkImage('${CreaterProfileImage}'),
+                                        ),
+                                        onPressed: (){
+                                          Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                                            print(fireModel.create);
+                                            return ProfileDetail( user: '${fireModel.create}',);
+
+                                          })).then((value){
+                                            if(value){
+                                              setState((){});
+                                            }
+                                          });
+                                        },
                                         ),
                                         SizedBox(
                                           width: 10,
@@ -203,7 +235,7 @@ class _DetailPageState extends State<DetailPage> {
                                           ),
                                           softWrap: false,
                                         )
-                                      ],
+                                      ],  //children
                                     ),
                                   ),
                                   flex: 3,
@@ -349,26 +381,26 @@ class _DetailPageState extends State<DetailPage> {
                 child: FloatingActionButton.extended(
                   backgroundColor: Color(0xff1677ff),
                   elevation: 0.0,
-                  onPressed: () {},
                   /// onPressed 이걸로 변경하면 텍스트 필드 올라옵니당 ///
-                     // onPressed: () => showDialog<String>(
-                  //   context: context,
-                  //   builder: (BuildContext context) => AlertDialog(
-                  //     content: TextField(
-                  //       decoration: InputDecoration(
-                  //         hintText: "본인 소개 또는 일정에 관한 내용을 작성해 주세요"
-                  //       ),
-                  //     ),
-                  //     alignment: Alignment.bottomCenter,
-                  //     actionsAlignment: MainAxisAlignment.center,
-                  //     actions: <Widget>[
-                  //       TextButton(
-                  //         onPressed: () {},
-                  //         child: const Text('참여 신청하기'),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
+                  onPressed: () => showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      content: TextField(
+                        controller: contentsController,
+                        decoration: InputDecoration(
+                          hintText: "본인 소개 또는 일정에 관한 내용을 작성해 주세요"
+                        ),
+                      ),
+                      alignment: Alignment.bottomCenter,
+                      actionsAlignment: MainAxisAlignment.center,
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: sendRegister,
+                          child: const Text('참여 신청하기'),
+                        ),
+                      ],
+                    ),
+                  ),
                   label: Padding(
                     padding: EdgeInsets.fromLTRB(95, 0, 95, 0),
                     child: Text(
