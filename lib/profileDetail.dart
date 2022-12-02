@@ -148,444 +148,487 @@ class _ProfileDetailState extends State<ProfileDetail> {
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
       ),
-      body: Pinned.fromPins(
-        Pin(size: 375.0, middle: 0.5),
-        Pin(start: 10.0, end: 10.0),
-        child: Container(
-          width: 375,
-          height: 600,
-          color: Colors.orange,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// 프로필 사진 및 인스타,페이스북,트위터등 버튼 부분 ///
-              Container(
-                  color: Colors.green,
+      body:
+          Pinned.fromPins(
+              Pin(size: 375.0, middle: 0.5), Pin(start: 10.0, end: 10.0),
+              child: Container(
                   width: 375,
-                  height: 80,
-                  child: Stack(
+                  height: 600,
+                  color: Colors.orange,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Positioned(
-                          child: SizedBox(
-                              width: 60,
-                              height: 80,
-
-                              /// 프로필 사진 부분 //
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage('${image}'),
-                              ))),
-                      Positioned(
-                          left: 180,
-                          bottom: -3,
-                          child: SizedBox(
-                            width: 300,
-                            height: 40,
-                            child: Row(
-                              /// 버튼 부분 ///
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    _URL(instagram);
-                                  },
-                                  icon: Icon(Icons.abc),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    _URL(facebook);
-                                  },
-                                  icon: Icon(Icons.abc),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    _URL(twitter);
-                                  },
-                                  icon: Icon(Icons.abc),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    _URL(naverblog);
-                                  },
-                                  icon: Icon(Icons.abc),
-                                )
-                              ],
-                            ),
-                          ))
-                    ],
-                  )),
-
-              /// 이름 및 나이 부분 ///
-              Container(
-                width: 375,
-                height: 50,
-                color: Colors.purple,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('${name}'),
-                    Text('${gender}' + " . " + '${age}' + "세")
-                  ],
-                ),
-              ),
-
-              /// 자기 소개 부분 ///
-              Container(
-                width: 375,
-                height: 70,
-                color: Colors.grey,
-                child: Text('${introduce}'),
-              ),
-
-              /// 적상한글, 참여중, 참여완료 버튼 ///
-              Container(
-                width: 375,
-                height: 50,
-                color: Colors.purple,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        if (_pageController.hasClients) {
-                          _pageController.animateToPage(0,
-                              duration: const Duration(milliseconds: 400),
-                              curve: Curves.easeInOut);
-                        }
-                      },
-                      child: Text("작성한글"),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        if (_pageController.hasClients) {
-                          _pageController.animateToPage(1,
-                              duration: const Duration(milliseconds: 400),
-                              curve: Curves.easeInOut);
-                        }
-                      },
-                      child: Text("참여중"),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        if (_pageController.hasClients) {
-                          _pageController.animateToPage(2,
-                              duration: const Duration(milliseconds: 400),
-                              curve: Curves.easeInOut);
-                        }
-                      },
-                      child: Text("참여 완료"),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                  width: 375,
-                  height: 370,
-                  color: Colors.grey,
-                  child: PageView(
-                    controller: _pageController,
-                    children: [
-                      SingleChildScrollView(
-                        /// 작성한 글 페이지 부분 ///
-                        child: Container(
+                      /// 프로필 사진 및 인스타,페이스북,트위터등 버튼 부분 ///
+                      Container(
+                          color: Colors.green,
                           width: 375,
-                          height: 500,
-                          color: Colors.red,
-                          child: Column(
+                          height: 80,
+                          child: Stack(
                             children: [
-                              Container(
-                                  width: 375,
-                                  height: 100,
-                                  color: Colors.blue,
-                                  child: FutureBuilder<List<FireModel>>(
-                                      future: FireService()
-                                          .getFireModelCreateByMe(widget.user),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData) {
-                                          List<FireModel> datas =
-                                              snapshot.data!;
-                                          return ListView.builder(
-                                              itemCount: datas.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                FireModel data = datas[index];
+                              Positioned(
+                                  child: SizedBox(
+                                      width: 60,
+                                      height: 80,
 
-                                                /// 알림 영역 부분 ///
-                                                return SizedBox(
-                                                  child: Stack(
-                                                    children: [
-                                                      /// 이미지 부분 ///
-                                                      Positioned(
-                                                        child: Container(
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                            child: Image(
-                                                              image: NetworkImage(
-                                                                  '${data.image}'),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                          left: 100,
-                                                          child: Container(
-                                                            width: 200,
-                                                            height: 90,
-                                                            color: Colors.grey,
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                /// 타이틀 ///
-                                                                Text(
-                                                                    '${data.title}'),
-
-                                                                /// 날짜 ///
-                                                                Text(
-                                                                    '${data.date}'),
-                                                                Row(
-                                                                  children: [
-                                                                    /// 여자 ///
-                                                                    Text("여자"),
-
-                                                                    /// 남자 ///
-                                                                    Text("남자")
-                                                                  ],
-                                                                ),
-
-                                                                /// 인원 부분 ///
-                                                                Text('${data.people}' +
-                                                                    "/" +
-                                                                    '${data.totalPeople}')
-                                                              ],
-                                                            ),
-                                                          ))
-                                                    ],
-                                                  ),
-                                                );
-                                              });
-                                        } else {
-                                          return const Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        }
-                                      }))
+                                      /// 프로필 사진 부분 //
+                                      child: CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage('${image}'),
+                                      ))),
+                              Positioned(
+                                  left: 180,
+                                  bottom: -3,
+                                  child: SizedBox(
+                                    width: 300,
+                                    height: 40,
+                                    child: Row(
+                                      /// 버튼 부분 ///
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            _URL(instagram);
+                                          },
+                                          icon: Icon(Icons.abc),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            _URL(facebook);
+                                          },
+                                          icon: Icon(Icons.abc),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            _URL(twitter);
+                                          },
+                                          icon: Icon(Icons.abc),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            _URL(naverblog);
+                                          },
+                                          icon: Icon(Icons.abc),
+                                        )
+                                      ],
+                                    ),
+                                  ))
                             ],
-                          ),
+                          )),
+
+                      /// 이름 및 나이 부분 ///
+                      Container(
+                        width: 375,
+                        height: 50,
+                        color: Colors.purple,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${name}'),
+                            Text('${gender}' + " . " + '${age}' + "세")
+                          ],
                         ),
                       ),
 
-                                  SingleChildScrollView(
-                                    /// 작성한 글 페이지 부분 ///
+                      /// 자기 소개 부분 ///
+                      Container(
+                        width: 375,
+                        height: 70,
+                        color: Colors.grey,
+                        child: Text('${introduce}'),
+                      ),
 
-                                    /// 변경된 컨테이너 부분
-                                    child: Container(
-                                      width: 375,
-                                      height: 500,
-                                      color: Colors.red,
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                              width: 375,
-                                              height: 100,
-                                              color: Colors.blue,
-                                              child: FutureBuilder<
-                                                      List<FireModel>>(
-                                                  future: FireService()
-                                                      .getFireModelParticipating(
-                                                          widget.user),
-                                                  builder: (context, snapshot) {
-                                                    if (snapshot.hasData) {
-                                                      List<FireModel> datas =
-                                                          snapshot.data!;
-                                                      return ListView.builder(
-                                                          itemCount:
-                                                              datas.length,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int index) {
-                                                            FireModel data =
-                                                                datas[index];
+                      /// 적상한글, 참여중, 참여완료 버튼 ///
+                      Container(
+                        width: 375,
+                        height: 50,
+                        color: Colors.purple,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                if (_pageController.hasClients) {
+                                  _pageController.animateToPage(0,
+                                      duration:
+                                          const Duration(milliseconds: 400),
+                                      curve: Curves.easeInOut);
+                                }
+                              },
+                              child: Text("작성한글"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                if (_pageController.hasClients) {
+                                  _pageController.animateToPage(1,
+                                      duration:
+                                          const Duration(milliseconds: 400),
+                                      curve: Curves.easeInOut);
+                                }
+                              },
+                              child: Text("참여중"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                if (_pageController.hasClients) {
+                                  _pageController.animateToPage(2,
+                                      duration:
+                                          const Duration(milliseconds: 400),
+                                      curve: Curves.easeInOut);
+                                }
+                              },
+                              child: Text("참여 완료"),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                          width: 375,
+                          height: 370,
+                          color: Colors.grey,
+                          child: PageView(
+                            controller: _pageController,
+                            children: [
+                              SingleChildScrollView(
+                                /// 작성한 글 페이지 부분 ///
+                                child: Container(
+                                  width: 375,
+                                  height: 300,
+                                  color: Colors.red,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                          width: 375,
+                                          height: 300,
+                                          color: Colors.blue,
+                                          child: FutureBuilder<List<FireModel>>(
+                                              future: FireService()
+                                                  .getFireModelCreateByMe(
+                                                      widget.user),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.hasData) {
+                                                  List<FireModel> datas =
+                                                      snapshot.data!;
 
-                                                            /// 알림 영역 부분 ///
-                                                            return SizedBox(
-                                                              child: Stack(
-                                                                children: [
-                                                                  /// 이미지 부분 ///
-                                                                  Positioned(
-                                                                    child: Container(
-                                                                      child: ClipRRect(
-                                                                        borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
+                                                  return ListView.builder(
+                                                      itemCount: datas.length,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              int index) {
+                                                        FireModel data =
+                                                            datas[index];
+
+                                                        /// 알림 영역 부분 ///
+                                                        return SizedBox(
+                                                          child: Stack(
+                                                            children: [
+                                                              /// 이미지 부분 ///
+                                                              Positioned(
+                                                                child:
+                                                                    Container(
+                                                                  width: 100,
+                                                                  height: 100,
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
                                                                             10),
-                                                                        child: Image(
-                                                                          image: NetworkImage(
-                                                                              '${data.image}'),
-                                                                        ),
-                                                                      ),
+                                                                    child:
+                                                                        Image(
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                      image: NetworkImage(
+                                                                          '${data.image}'),
                                                                     ),
                                                                   ),
-                                                                  Positioned(
-                                                                      left: 100,
-                                                                      child: Container(
-                                                                        width: 200,
-                                                                        height: 90,
-                                                                        color: Colors.grey,
-                                                                        child: Column(
-                                                                          crossAxisAlignment:
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                  left: 150,
+                                                                  child:
+                                                                      Container(
+                                                                    width: 200,
+                                                                    height: 90,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
                                                                           CrossAxisAlignment
                                                                               .start,
+                                                                      children: [
+                                                                        /// 타이틀 ///
+                                                                        Text(
+                                                                            '${data.title}'),
+
+                                                                        /// 날짜 ///
+                                                                        Text(
+                                                                            '${data.date}'),
+
+                                                                        ///성별///
+                                                                        Row(
                                                                           children: [
-                                                                            /// 타이틀 ///
-                                                                            Text(
-                                                                                '${data.title}'),
-
-                                                                            /// 날짜 ///
-                                                                            Text(
-                                                                                '${data.date}'),
-                                                                            Row(
-                                                                              children: [
-                                                                                /// 여자 ///
-                                                                                Text("여자"),
-
-                                                                                /// 남자 ///
-                                                                                Text("남자")
-                                                                              ],
-                                                                            ),
-
-                                                                            /// 인원 부분 ///
-                                                                            Text('${data.people}' +
-                                                                                "/" +
-                                                                                '${data.totalPeople}')
+                                                                            if (data.female == 1 && data.male == 1) ...[
+                                                                              Text("여자"),
+                                                                              Text("남자")
+                                                                            ] else if (data.female ==
+                                                                                1) ...[
+                                                                              Text("여자")
+                                                                            ] else if (data.male ==
+                                                                                1) ...[
+                                                                              Text("남자")
+                                                                            ]
                                                                           ],
                                                                         ),
-                                                                      ))
-                                                                ],
-                                                              ),
-                                                            );
-                                                          });
-                                                    } else {
-                                                      return const Center(
-                                                          child:
-                                                              CircularProgressIndicator());
-                                                    }
-                                                  }))
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SingleChildScrollView(
-                                    /// 참야완료 페이지 부분 ///
-                                    child: Container(
-                                      width: 375,
-                                      height: 500,
-                                      color: Colors.red,
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                              width: 375,
-                                              height: 100,
-                                              color: Colors.blue,
-                                              child: FutureBuilder<
-                                                      List<FireModel>>(
-                                                  future: FireService()
-                                                      .getFireModelParticipated(
-                                                          widget.user),
-                                                  builder: (context, snapshot) {
-                                                    if (snapshot.hasData) {
-                                                      List<FireModel> datas =
-                                                          snapshot.data!;
-                                                      return ListView.builder(
-                                                          itemCount:
-                                                              datas.length,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int index) {
-                                                            FireModel data =
-                                                                datas[index];
 
-                                                            /// 알림 영역 부분 ///
-                                                            return SizedBox(
-                                                              child: Stack(
-                                                                children: [
-                                                                  /// 이미지 부분 ///
-                                                                  Positioned(
-                                                                    child: Container(
-                                                                      child: ClipRRect(
-                                                                        borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
+                                                                        /// 인원 부분 ///
+                                                                        Text('${data.people}' +
+                                                                            "/" +
+                                                                            '${data.totalPeople}')
+                                                                      ],
+                                                                    ),
+                                                                  ))
+                                                            ],
+                                                          ),
+                                                        );
+                                                      });
+                                                } else {
+                                                  return const Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                }
+                                              }))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SingleChildScrollView(
+                                /// 작성한 글 페이지 부분 ///
+
+                                /// 변경된 컨테이너 부분
+                                child: Container(
+                                  width: 375,
+                                  height: 500,
+                                  color: Colors.red,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                          width: 375,
+                                          height: 300,
+                                          color: Colors.blue,
+                                          child: FutureBuilder<List<FireModel>>(
+                                              future: FireService()
+                                                  .getFireModelParticipating(
+                                                      widget.user),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.hasData) {
+                                                  List<FireModel> datas =
+                                                      snapshot.data!;
+                                                  return ListView.builder(
+                                                      itemCount: datas.length,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              int index) {
+                                                        FireModel data =
+                                                            datas[index];
+
+                                                        /// 알림 영역 부분 ///
+                                                        return SizedBox(
+                                                          child: Stack(
+                                                            children: [
+                                                              /// 이미지 부분 ///
+                                                              Positioned(
+                                                                child:
+                                                                    Container(
+                                                                  width: 100,
+                                                                  height: 100,
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
                                                                             10),
-                                                                        child: Image(
-                                                                          image: NetworkImage(
-                                                                              '${data.image}'),
-                                                                        ),
-                                                                      ),
+                                                                    child:
+                                                                        Image(
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                      image: NetworkImage(
+                                                                          '${data.image}'),
                                                                     ),
                                                                   ),
-                                                                  Positioned(
-                                                                      left: 100,
-                                                                      child: Container(
-                                                                        width: 200,
-                                                                        height: 90,
-                                                                        color: Colors.grey,
-                                                                        child: Column(
-                                                                          crossAxisAlignment:
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                  left: 100,
+                                                                  child:
+                                                                      Container(
+                                                                    width: 200,
+                                                                    height: 90,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
                                                                           CrossAxisAlignment
                                                                               .start,
+                                                                      children: [
+                                                                        /// 타이틀 ///
+                                                                        Text(
+                                                                            '${data.title}'),
+
+                                                                        /// 날짜 ///
+                                                                        Text(
+                                                                            '${data.date}'),
+                                                                        ///성별///
+                                                                        Row(
                                                                           children: [
-                                                                            /// 타이틀 ///
-                                                                            Text(
-                                                                                '${data.title}'),
-
-                                                                            /// 날짜 ///
-                                                                            Text(
-                                                                                '${data.date}'),
-                                                                            Row(
-                                                                              children: [
-                                                                                /// 여자 ///
-                                                                                Text("여자"),
-
-                                                                                /// 남자 ///
-                                                                                Text("남자")
-                                                                              ],
-                                                                            ),
-
-                                                                            /// 인원 부분 ///
-                                                                            Text('${data.people}' +
-                                                                                "/" +
-                                                                                '${data.totalPeople}')
+                                                                            if (data.female == 1 && data.male == 1) ...[
+                                                                              Text("여자"),
+                                                                              Text("남자")
+                                                                            ] else if (data.female ==
+                                                                                1) ...[
+                                                                              Text("여자")
+                                                                            ] else if (data.male ==
+                                                                                1) ...[
+                                                                              Text("남자")
+                                                                            ]
                                                                           ],
                                                                         ),
-                                                                      ))
-                                                                ],
-                                                              ),
-                                                            );
-                                                          });
-                                                    } else {
-                                                      return const Center(
-                                                          child:
-                                                              CircularProgressIndicator());
-                                                    }
-                                                  }))
-                                        ],
-                                      ),
-                                    ),
+
+                                                                        /// 인원 부분 ///
+                                                                        Text('${data.people}' +
+                                                                            "/" +
+                                                                            '${data.totalPeople}')
+                                                                      ],
+                                                                    ),
+                                                                  ))
+                                                            ],
+                                                          ),
+                                                        );
+                                                      });
+                                                } else {
+                                                  return const Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                }
+                                              }))
+                                    ],
                                   ),
-                                ],
-                              )
-              )
+                                ),
+                              ),
+                              SingleChildScrollView(
+                                /// 참야완료 페이지 부분 ///
+                                child: Container(
+                                  width: 375,
+                                  height: 500,
+                                  color: Colors.red,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                          width: 375,
+                                          height: 300,
+                                          color: Colors.blue,
+                                          child: FutureBuilder<List<FireModel>>(
+                                              future: FireService()
+                                                  .getFireModelParticipated(
+                                                      widget.user),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.hasData) {
+                                                  List<FireModel> datas =
+                                                      snapshot.data!;
+                                                  return ListView.builder(
+                                                      itemCount: datas.length,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              int index) {
+                                                        FireModel data =
+                                                            datas[index];
+
+                                                        /// 알림 영역 부분 ///
+                                                        return SizedBox(
+                                                          child: Stack(
+                                                            children: [
+                                                              /// 이미지 부분 ///
+                                                              Positioned(
+                                                                child:
+                                                                    Container(
+                                                                  width: 100,
+                                                                  height: 100,
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    child:
+                                                                        Image(
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                      image: NetworkImage(
+                                                                          '${data.image}'),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                  left: 100,
+                                                                  child:
+                                                                      Container(
+                                                                    width: 200,
+                                                                    height: 90,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        /// 타이틀 ///
+                                                                        Text(
+                                                                            '${data.title}'),
+
+                                                                        /// 날짜 ///
+                                                                        Text(
+                                                                            '${data.date}'),
+                                                                        ///성별///
+                                                                        Row(
+                                                                          children: [
+                                                                            if (data.female == 1 && data.male == 1) ...[
+                                                                              Text("여자"),
+                                                                              Text("남자")
+                                                                            ] else if (data.female ==
+                                                                                1) ...[
+                                                                              Text("여자")
+                                                                            ] else if (data.male ==
+                                                                                1) ...[
+                                                                              Text("남자")
+                                                                            ]
+                                                                          ],
+                                                                        ),
+
+                                                                        /// 인원 부분 ///
+                                                                        Text('${data.people}' +
+                                                                            "/" +
+                                                                            '${data.totalPeople}')
+                                                                      ],
+                                                                    ),
+                                                                  ))
+                                                            ],
+                                                          ),
+                                                        );
+                                                      });
+                                                } else {
+                                                  return const Center(
+                                                      child:
+                                                          CircularProgressIndicator());
+                                                }
+                                              }))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ))
                     ],
-                  ))
-
-          ),
-        );
+                  ))),
+    );
   }
 }
