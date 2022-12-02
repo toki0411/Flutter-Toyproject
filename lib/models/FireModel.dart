@@ -22,9 +22,11 @@ class FireModel{
     this.title,  // 제목
     this.contents,  //내용
     this.age,    // 나이 범위
-    this.totalPeople,required // 총 인원수
+    this.totalPeople, // 총 인원수
     this.category, // 장르
-    required this.reference, //레퍼런스?
+    this.curstate,  //현재 상태 (1: 모집중 0: 모집완료)
+    this.participants,  //참여자 명단
+    required this.reference, //레퍼런스
   });
   dynamic create;
   dynamic female;
@@ -38,10 +40,13 @@ class FireModel{
   dynamic totalPeople;
   dynamic category;
   dynamic age;
+  dynamic curstate;
+  dynamic participants;
   dynamic dateAt=DateTime.now();
-  dynamic reference;
+  //dynamic reference;
+  DocumentReference? reference;
 
-
+  //json -> object로 firestore에서 불러올 때
   FireModel.fromJson(dynamic json,this.reference){
     create = json['create'];
     female = json['female'];
@@ -55,14 +60,21 @@ class FireModel{
     totalPeople= json['totalPeople'];
     dateAt= json['dateAt'];
     category=json['category'];
+    curstate = json['curstate'];
+    participants=json['participants'];
     age=json['age'];
   }
+  //특정한 자료를 받아올 때
   FireModel.fromSnapShot(DocumentSnapshot<Map<dynamic,dynamic>>snapshot)
   : this.fromJson(snapshot.data(), snapshot.reference);
-    FireModel.fromQuerySnapshot(
+
+  //컬렉션 내에 특정 조건을 만족하는 데이터를 다 가지고 올 때
+  FireModel.fromQuerySnapshot(
         QueryDocumentSnapshot<Map<String,dynamic>> snapshot)
         : this.fromJson(snapshot.data(), snapshot.reference);
-    Map<String,dynamic>toJson(){
+
+  //object -> json, firestore에 저장할 때
+  Map<String,dynamic>toJson(){
       final map=<String,dynamic>{};
       map['create']=create;
       map['female']=female;
@@ -77,6 +89,8 @@ class FireModel{
       map['dateAt'] = dateAt;
       map['totalPeople']=totalPeople;
       map['age'] = age;
+      map['curstate']=curstate;
+      map['participants']=participants;
       return map;
-    }
+  }
 }

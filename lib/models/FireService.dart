@@ -13,7 +13,7 @@ class FireService{
     await FirebaseFirestore.instance.collection("post").add(json);
   }
 
-  //READ 각각의 데이터를 콕 집어서 가져올때
+  //READ
   Future<List<FireModel>> getFireModel(String userKey) async{
     CollectionReference<Map<String, dynamic>>collectionReference=
     FirebaseFirestore.instance.collection("post");
@@ -26,6 +26,76 @@ class FireService{
       if(fireModel.category=="${userKey}") {
         postList.add(fireModel);
       }
+    }
+    return postList;
+  }
+  //내가 작성한 글 불러오기
+  Future<List<FireModel>> getFireModelCreateByMe(String userKey) async{
+    CollectionReference<Map<String, dynamic>>collectionReference=
+    FirebaseFirestore.instance.collection("post");
+    QuerySnapshot<Map<String, dynamic>> querySnapshot=
+    await collectionReference.orderBy("create").get();
+
+    List<FireModel> postList =[];
+    for(var doc in querySnapshot.docs){
+      FireModel fireModel = FireModel.fromQuerySnapshot(doc);
+      if(fireModel.create=="${userKey}") {
+        postList.add(fireModel);
+      }
+    }
+    return postList;
+  }
+  //내가 참여한 중인 글 불러오기
+  Future<List<FireModel>> getFireModelParticipating(String userKey) async{
+    CollectionReference<Map<String, dynamic>>collectionReference=
+    FirebaseFirestore.instance.collection("post");
+    QuerySnapshot<Map<String, dynamic>> querySnapshot=
+    await collectionReference.orderBy("create").get();
+
+    List<FireModel> postList =[];
+    for(var doc in querySnapshot.docs){
+      FireModel fireModel = FireModel.fromQuerySnapshot(doc);
+      if(fireModel.curstate==1) {
+        for(int i=0; i<fireModel.participants.length;i++){
+          if(fireModel.participants[i]=="${userKey}") {
+            postList.add(fireModel);
+          }
+        }
+      }
+    }
+    return postList;
+  }
+  //내가 참여완료한 글 불러오기
+  Future<List<FireModel>> getFireModelParticipated(String userKey) async{
+    CollectionReference<Map<String, dynamic>>collectionReference=
+    FirebaseFirestore.instance.collection("post");
+    QuerySnapshot<Map<String, dynamic>> querySnapshot=
+    await collectionReference.orderBy("create").get();
+
+    List<FireModel> postList =[];
+    for(var doc in querySnapshot.docs){
+      FireModel fireModel = FireModel.fromQuerySnapshot(doc);
+      if(fireModel.curstate==0) {
+        for(int i=0; i<fireModel.participants.length;i++){
+          if(fireModel.participants[i]=="${userKey}") {
+            postList.add(fireModel);
+          }
+        }
+      }
+    }
+    return postList;
+  }
+
+  Future<List<FireModel>> get_FireModel() async{
+    CollectionReference<Map<String, dynamic>>collectionReference=
+    FirebaseFirestore.instance.collection("post");
+    QuerySnapshot<Map<String, dynamic>> querySnapshot=
+    await collectionReference.orderBy("create").get();
+
+    List<FireModel> postList =[];
+    for(var doc in querySnapshot.docs){
+      FireModel fireModel = FireModel.fromQuerySnapshot(doc);
+      postList.add(fireModel);
     }
     return postList;
   }
@@ -45,10 +115,13 @@ class FireService{
     return postList;
   }
 
+  //update
+  Future updateFireModel({required DocumentReference reference, required Map<String,dynamic> json}) async{
+    await reference.set(json);
+  }
+  //delete
   Future<void> delFireModel(DocumentReference reference) async{
     await reference.delete();
   }
-  Future<void> updateFireModel(Map<String,dynamic>json,DocumentReference reference) async{
-    await reference.set(json);
-  }
+
 }
