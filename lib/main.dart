@@ -1,7 +1,13 @@
+import 'package:blackup/DetailPage.dart';
+import 'package:blackup/eventPage2.dart';
+import 'package:blackup/profileDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart'as kakao;
 import 'app.dart';
+import 'editPage.dart';
+import 'eventPage2.dart';
+import 'eventPage.dart';
 import 'kakao_login/firebase_options.dart';
 import 'naver_login/a.dart';
 //import 'naver_login/naver_login.dart';
@@ -24,6 +30,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       ///** 달력 언어지정 부분 **//
       localizationsDelegates: [
@@ -34,6 +41,8 @@ class MyApp extends StatelessWidget {
         const Locale('ko')
       ],
       debugShowCheckedModeBanner: false,
+      //home: EventPage2(user: 'kakao:2419996990'),
+      //home: ProfileDetail(user: 'kakao:2419996990'),
       home: app(),
     );
   }
