@@ -10,7 +10,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async{
-  kakao.KakaoSdk.init(nativeAppKey: '235a59da98034f785d8415fa0baa1a51');
+  kakao.KakaoSdk.init(nativeAppKey: '');
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(  //파이어베이스 초기화 하는 코드
     options: DefaultFirebaseOptions.currentPlatform,
