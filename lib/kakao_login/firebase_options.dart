@@ -50,20 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyArIrlsyVvtHpAD90D6cyF2dx0fR44crYk',
-    appId: '1:71049986819:android:ddc74c6dcebf5397fadf36',
-    messagingSenderId: '71049986819',
-    projectId: 'black-up-b0203',
-    storageBucket: 'black-up-b0203.appspot.com',
+    apiKey: '',
+    appId: '',
+    messagingSenderId: '',
+    projectId: '',
+    storageBucket: '',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB8qFCfJ-2Bd0KkbFU_iSQqw_TDQaw85sw',
-    appId: '1:71049986819:ios:147d2026e95aba3afadf36',
-    messagingSenderId: '71049986819',
-    projectId: 'black-up-b0203',
-    storageBucket: 'black-up-b0203.appspot.com',
-    iosClientId: '71049986819-td5all56irfmhol1apd4ngpamkr5qb3m.apps.googleusercontent.com',
-    iosBundleId: 'com.example.blackup',
+    apiKey: '',
+    appId: '',
+    messagingSenderId: '',
+    projectId: '',
+    storageBucket: '',
+    iosClientId: '',
+    iosBundleId: '',
   );
 }
